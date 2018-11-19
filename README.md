@@ -1,6 +1,6 @@
 # Prolog-BattleRoyale
 
-Membuat sebuah battle royale game dengan menggunakan bahasa pemrograman deklaratif Prolog (menggunakan GNU Prolog).
+Make a game Battle Royale ( PUBG like ) based on GNU Prolog for IF-2121 Logika Informatika
 
 Team : 
 
