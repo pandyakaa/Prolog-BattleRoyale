@@ -11,25 +11,20 @@ S12K	70	8
 */
                             /* ======== DECLARING FACTS ======== */
 /* WEAPON NAME */
-weaponName(0, akm).
-weaponName(1, sks).
-weaponName(2, kar).
-weaponName(3, ump).
-weaponName(4, s12k).
+weaponName(1, akm).
+weaponName(2, sks).
+weaponName(3, kar).
+weaponName(4, ump).
+weaponName(5, uzi).
 
 /* WEAPON DAMAGE */
 weaponDamage(akm,20).
 weaponDamage(sks,30).
 weaponDamage(kar,50).
 weaponDamage(ump,20).
-weaponDamage(s12k,70).
+weaponDamage(uzi,20).
 
-/* WEAPON AMMO */
-weaponAmmo(1, akm, 30).
-weaponAmmo(2, sks, 25).
-weaponAmmo(3, kar, 25).
-weaponAmmo(4, ump, 40).
-weaponAmmo(5, s12k, 8).
+
 
 /* ITEM TYPE */
 itemType(armor, helmet).
@@ -40,11 +35,8 @@ itemType(medicine, painkiller).
 itemType(medicine, bandage).
 itemType(medicine, aidKit).
 itemType(medicine, medKit).
-itemType(ammo, akm).
-itemType(ammo, sks).
-itemType(ammo, kar).
-itemType(ammo, ump).
-itemType(ammo, s12k).
+itemType(ammo, ar).
+itemType(ammo, smg).
 
 /* MEDICINE HEAL RATE */
 medicineHeal(1, painkiller, 30).
