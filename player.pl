@@ -1,4 +1,5 @@
-:- dynamic(player/7).
+:-dynamic(player/7).
+:-dynamic(enemy/4).
 
 
 /*Initial Player Stats*/
@@ -89,6 +90,31 @@ randomCoordinate(X, Y):-
 
 %attack-check
 
-    
 
-/*main for test*/
+
+/*enemy*/
+
+init_enemy(0) :- !.
+init_enemy(N) :- generate_enemy(N), M is N-1, init_enemy(M).
+
+
+generate_enemy(Id):-
+  initHealth(Health),
+  randomCoordinate(X,Y),
+  asserta(enemy(Id, X,Y,Health)).
+
+%health
+decrease_HealthE(Amount):-
+    enemy(Id,X,Y,Health),
+    NewHealth is Health - Amount,
+    NewHealth =< 0,
+    retract(enemy(Id,X,Y,Health)),
+    asserta(enemy(Id,X,Y,0)).
+
+decrease_HealthE(Amount):-
+    enemy(Id,X,Y,Health),
+    NewHealth is Health - Amount,
+    retract(enemy(Id,X,Y,Health)),
+    asserta(enemy(Id,X,Y,NewHealth)).
+
+%attack Player
