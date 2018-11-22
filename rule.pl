@@ -1,47 +1,107 @@
 /* File rule-rule kendali dasar */
 
-/* START */
+/* PLAYER ATTACK  */
 
-start :- g_read(started, X), X = 1, write('Game sudah dimulai'), nl, fail, !.
-start :-
-	g_read(started, X), X = 0, !,
-	g_assign(started, 1),
-	set_seed(50), randomize,
-	init_everything,
-	main_loop.
+attack :-
+				player(X,Y,_,_,Weapon,_,[_,_]),
+				weapon_atk(Weapon,WeaponDamage),
+				enemy(_,X,Y,_),
+				atk_enemy(X,Y,WeaponDamage,Atk),!.
+attack :-
+				fail_attack,fail.
 
-	/* untuk command init_xx dan main_loop ada di file main */
+atk_enemy(X,Y,WeaponDamage,EnemyAtk) :-
+				enemy(Id,X,Y,_),
+				print_inflict_damage(WeaponDamage),
+				decrease_Health(EnemyAtk),
+				print_decrease_health(EnemyAtk),
+				decrease_HealthE(Id,WeaponDamage),fail.
+atk_enemy(_,_,_,_) :- !.
 
+/* ENEMY ATTACK */
+enemy_attack :-
+				player(X,Y,_,_,_,_,_),
+				enemy_atk(X,Y).
 
-/* VALIDASI STARTED */
+enemy_atk(X,Y) :-
+				enemy(_,X,Y,_),
+				decrease_health(5),
+				print_decrease_health(5) , fail.
 
-has_started:- g_read(started,0), write('Game belum dimulai!!'),nl,!, fail.
-has_started:- g_read(started,1),!.
+enemy_atk(_,_) :- !.
+
+/* IF GAME HAS STARTED */
+has_started :-
+				g_read(started,0) ,
+				write('Game has not startedd yet!'),nl,!,fail.
+has_started :-
+				g_read(started,1),!.
 
 /* HELP */
-
-help :- has_started,print_help.
-
-	/* untuk command print_xx ada di file print */
+help :-
+				has_started,print_help.
 
 /* QUIT */
 
 quit :-
-	has_started, nl,
-	write('Terimakasih sudah memainkan game ini !!'), nl,
-	halt.
+				has_started, nl,
+				write('Terimakasih sudah memainkan game ini !!'), nl,
+				halt.
 
 /* LOOK */
+look :-
+				player(X,Y,_,_,_,_,_),!,
+				print_player_loc(X,Y),
+				print_items_loc(X,Y),
+				/* Kalkulasi map */
+				NW_X is X-1, NW_Y is Y-1,
+				N_X is X, N_Y is Y-1,
+				NE_X is X+1, NE_Y is Y-1,
+				W_X is X-1, W_Y is Y,
+				C_X is X, C_Y is Y,
+				E_X is X+1, E_Y is Y,
+				SW_X is X-1, SW_Y is Y+1,
+				S_X is X, S_Y is Y+1,
+				SE_X is X+1, SE_Y is Y+1,nl,
+				/* Print sekitar */
+				print_north(N_X,N_Y), print_south(S_X,S_Y),
+				print_east(E_X,E_Y), print_west(W_X,W_Y), nl,
+				print_format(NW_X,NW_Y),!,
+				print_format(N_X,N_Y),!,
+				print_format(NE_X,NE_Y),!,nl,
+				print_format(W_X,W_Y),!,
+				print_format(C_X,C_Y),!,
+				print_format(E_X,E_Y),!, nl,
+				print_format(SW_X,SW_Y),!,
+				print_format(S_X,S_Y),!,
+				print_format(SE_X,SE_Y),!,nl.
+
+/* DROP ITEM */
+drop(Object) :-
+				player(X,Y,_,_,_,_,_) , !,
+				player(_,_,_,_,_,Inventory,_) , !,
+				member(Object,Inventory),
+				delete_item(Object),
+				asserta(location(X,Y,Object)),
+				format('You dropped ~w!',[Object]),nl,!.
+
+drop(Object) :-
+				format('Kamu tidak punya ~w!',[Object]),nl.
+
+/* PRINT MAP */
+
+map :-
+				print_map(-1,-1),nl,!.
 
 /* MOVE */
 
-atas :- has_started, gerak_atas, !.
+atas :- has_started, gerak_atas, print_atas, !.
 atas :- fail.
-bawah :- has_started, gerak_bawah,!.
+bawah :- has_started, gerak_bawah, print_bawah , !.
 bawah :- fail.
-kanan :- has_started, gerak_kanan , !.
+kanan :- has_started, gerak_kanan , print_kanan ,!.
 kanan :- fail.
-kiri :- has_started, gerak_kiri ,!.
+kiri :- has_started, gerak_kiri , print_kiri , !.
 kiri :- fail.
 
 	/* untuk command gerak_xx ada di file player */
@@ -51,31 +111,121 @@ kiri :- fail.
 status :-
 	has_started,
 	print_status.
-	
+
 	/* untuk command print_xx ada di file print */
 
 
 /* TAKE OBJECT */
 take(Object) :-
-	has_started, take_item(Object),nl, 
-	formmat('You have picked ~w !' , [Object]),nl,!.
+		has_started, take_item(Object),nl,
+		formmat('You have picked ~w !' , [Object]),nl,!.
 
 take(_) :-
-	has_started, nl ,
-	write('Item is not exist'),nl,fail.
+		has_started, nl ,
+		write('Item is not exist'),nl,fail.
 
 take_item(Object) :-
-	has_started,
-	player(X,Y,_,_,_,_,_),
-	location(X,Y,Object),
-	add_item(Object),
-	retract(location(X,Y,Object)),!.
+		has_started,
+		player(X,Y,_,_,_,_,_),
+		location(X,Y,Object),
+		add_item(Object),
+		retract(location(X,Y,Object)),!.
 
 /* USE OBJECT */
-use(
+use(Object) :-
+		player(_,_,_,_,Weapon,Inventory,_),
+		member(Object,Inventory),
+		weaponName(_, Object),
+		delete_item(Object),
+		set_weapon(Object),
+		add_item(Weapon),nl,
+		format('You switched your weapon to ~w !', [Object]), nl, !.
 
+use(Object) :-
+				player(_,_,_,_,Weapon,Inventory,_),
+				member(Object,Inventory),
+				weaponName(_, Object),
+				delete_item(Object),
+				set_weapon(Object),
+				add_item(Weapon),nl,
+				format('You switched your weapon to ~w !', [Object]), nl, !.
 
+use(Object) :-
+			player(_,_,_,_,_,Inventory,_),
+			member(Object, ListItem),
+			del_item(Object),
+			effect(Object), nl, !.
 
+use(_) :-
+				nl, write('Tidak ada item!!'), nl.
 
+/* OBJECT EFFECT */
+effect(Object) :-
+			itemType(Type,Object),
+			give_effect(Type,Object).
 
+give_effect(medicine,Object) :-
+			medicine_rate(_,Object,Rate),
+			increase_Health(Rate),
+			print_increase_health(Rate).
 
+give_effect(armor,Object) :-
+		armor_rate(_Object,Rate),
+		set_Armor(Rate),
+		print_armor_rate(Object,Rate).
+
+/* SAVE */
+
+save :-
+			nl, write('Write the name of your file?'), nl,
+			write('> '), read(File),
+			atom_concat(File, '.txt', Filetxt),
+			open(Filetxt, write, Stream),
+			save_all_fact(Stream),
+			close(Stream), 	write('Your file was saved !'), nl.
+
+save_all_fact(Stream) :-
+				save_location(Stream).
+			save_all_fact(Stream) :-
+				save_player(Stream).
+			save_all_fact(Stream) :-
+				save_enemies(Stream).
+			save_all_fact(_) :- !.
+
+save_location(Stream) :-
+				location(X,Y,Item),
+				write(Stream, location(X,Y,Item)), write(Stream, '.'), nl(Stream),
+				fail.
+
+save_enemies(Stream) :-
+			 	enemy(Id, X, CurrentY, Health),
+				write(Stream, enemy(EnemyID, X, Y, Health, Atk)), write(Stream, '.'), nl(Stream),
+				fail.
+
+save_player(Stream) :-
+			  player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+				write(Stream,player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), write(Stream, '.'), nl(Stream),
+				fail.
+
+	/* LOAD STATE */
+
+load :-
+				nl, write('Input file load!') , nl,
+				write('>') , read(File),
+				atom_concat(File,'.txt',Filetxt),
+				load_all_fact(Filetxt).
+
+load_all_fact(Filetxt) :-
+				retractall(enemy(_,_,_,_)),
+				retractall(player(_,_,_,_,_,_,_)),
+				retractall(location(_,_,_)),
+				open(Filetxt, read, Stream),
+				repeat,
+						read(Stream, In),
+						asserta(In),
+				at_end_of_stream(Stream),
+				close(Stream),
+				nl, write('Your File is loaded!'), nl, !.
+
+load_all_fact(_):-
+			  nl, write('Your input is wrong!'), nl, fail.
