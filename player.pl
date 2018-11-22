@@ -130,6 +130,16 @@ replace(L, _, _, L).
 
 %attack-check
 
+%Weapon
+
+set_weapon(Weapon):-
+    retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    asserta(location(X, Y, CurrentWeapon)),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+
+%Position
+get_position(X,Y):-
+    player(X,Y,_,_,_,_,_).
 
 %item addition and deletion
 

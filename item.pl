@@ -1,13 +1,12 @@
 :- dynamic(location/3).
-:- dynamic(player/7).
 /* ITEM */
 
 /*
 WEAPON
 NAME	DAMAGE	AMMO
 AKM	20	30
-SKS	30	25
-KAR	50	25
+SKS	30	25`
+KAR	50	25`
 UMP	20	40
 S12K	70	8
 */
@@ -70,14 +69,14 @@ armorStrength(3, belt, 10).
 
 /* INITIALIZING MAP WITH WEAPON */
 initAllWeapon :-
-    initWeapon(20), initWeaponForge(5).
+    init_weapon(20), init_weaponForge(5).
 
 /* RANDOM WEAPON */
 randomWeapon :-
     repeat,
     random(1, 5, N), weaponName(N, A),
     random(0, 20, X), random(0, 20, Y),
-    grid(X, Y, Loc), Loc \== blank,
+    area(X, Y, Loc), Loc \== blank,
     asserta(location(X,Y,A)).
 
 
@@ -88,17 +87,17 @@ randomWeaponForge :-
 
 
 /* LOCATION OF WEAPON */
-initWeapon(0) :-!.
-initWeapon(N) :-
+init_weapon(0) :-!.
+init_weapon(N) :-
     randomWeapon,
     M is N-1,
-    initWeapon(M).
+    init_weapon(M).
 
-initWeaponForge(0) :- !.
-initWeaponForge(N) :-
+init_weaponForge(0) :- !.
+init_weaponForge(N) :-
     randomWeaponForge,
     M is N-1,
-    initWeaponForge(M).
+    init_weaponForge(M).
 
 
 /* INITIALIZIG MAP WITH MEDICINE */
@@ -106,18 +105,18 @@ randomMedicine :-
     repeat,
     random(1,5, N), medicineHeal(N, A, _),
     random(0, 20, X), random(0, 20, Y),
-    grid(X, Y, Loc),
+    area(X, Y, Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).
 
-initMedicine(0) :- !.
-initMedicine(N) :-
+init_Medicine(0) :- !.
+init_Medicine(N) :-
     randomMedicine,
     M is N-1,
-    initMedicine(M).
+    init_Medicine(M).
 
 initAllMedicine:-
-    initMedicine(20).
+    init_Medicine(20).
 
 
 /* INITIALIZING ARMOR */
@@ -125,18 +124,18 @@ randomArmor:-
     repeat,
     random(1, 3, N), armorStrength(N, A, _),
     random(0, 20, X), random(0,20, Y),
-    grid(X,Y,Loc),
+    area(X,Y,Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).
 
-initArmor(0) :- !.
-initArmor(N) :-
+init_armor(0) :- !.
+init_armor(N) :-
     randomArmor,
     M is N-1,
-    initArmor(M).
+    init_armor(M).
 
 initAllArmor:-
-    initArmor(20).
+    init_armor(20).
 
 
 
@@ -145,32 +144,21 @@ randomAmmo:-
     repeat,
     random(1, 3, N), ammoReload(N, A, _),
     random(0, 20, X), random(0,20, Y),
-    grid(X,Y,Loc),
+    area(X,Y,Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).
 
-initAmmo(0) :- !.
-initAmmo(N) :-
+init_Ammo(0) :- !.
+init_Ammo(N) :-
     randomAmmo,
     M is N-1,
-    initAmmo(M).
+    init_Ammo(M).
 
 initAllAmmo:-
-    initAmmo(20).
+    init_Ammo(20).
 
 
 
 /* INITIALIZING LOCATION OD THE ITEM */
 initItems :-
     initAllWeapon, initAllMedicine, initAllArmor, initAllAmmo, !.
-
-
-/* MEDICINE EFFECT */
-medicineEffect(X) :-
-    medicineHeal(_, X, N),
-    increase_Health(N).
-
-/* SET ARMOR */
-armorEffect(X) :-
-    armorStrength(_, X, N),
-    set_Armor(N).

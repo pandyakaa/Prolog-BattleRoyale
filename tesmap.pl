@@ -14,27 +14,12 @@ area(X, Y, Region) :- X>= 1, X=<5, Y>=12, Y=<15, Region = zharki, !.
 area(X, Y, Region) :- X>= 6, X=<9, Y>=11, Y=<15, Region = severny, !.
 area(X, Y, Region) :- X>= 10, X=<15, Y>=13, Y=<15, Region = stalber.
 
-start :-
-    readme,
-    asserta(playerPos(2,3)),
-    asserta(deadzone_area(0)),
-    asserta(deadzone_timer(5)), !,
-    repeat, 
-        write('mau ngapain lo?- '),
-        read(Input),nl,
-        exec(Input), nl,
-        exec(tick), nl,
-    (Input == exit; endgame).
+
 
 exec(map) :- map, !.
 exec(tick) :- !, deadzone_counter.
 exec(exit) :- write('babay babyansyah'), nl.
 %exec(_) :- write('yeee kaga tau ni mo ngapain'), !.
-
-readme:-
-    write('JADI INI CHECKPOINT AWAL BUAT NGECEK MAP.'),nl,
-    write('         Semoga bisa ya hehehe           '), nl,
-    write('_________________________________________'), nl, nl.
 
 initTry:-
     playerPos(2,10),
@@ -54,12 +39,12 @@ deadzone_counter:-
     deadzone_area(X), Xn is X+1, retract(deadzone_area(X)), assertz(deadzone_area(Xn)).
 
 deadzone_counter:-!.
- 
+
 
 
 
 printPosition(X,Y) :-
-  deadzone_area(A), 
+  deadzone_area(A),
   (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), !,
   write('X').
 
@@ -148,10 +133,14 @@ is_able_move(_,Y):-deadzone_area(A),Y@=<A,!,fail.
 is_able_move(X,_):-deadzone_area(A),Aright is 19-A,X@>=Aright,!,fail.
 is_able_move(_,Y):-deadzone_area(A),Aright is 19-A,Y@>=Aright,!,fail.
 is_able_move(_,_).
- 
+
  /*Enter deadzone*/
  /*enter_deadzone:-
   player(X,Y,_,_,_,_,_),
   deadzone_area(A),
   (X@=<A; Y@=<A; Aright is 19-A, X@>=Aright; Aright is 19-A, Y@>=Aright),!,
   write('yah cupu lu masuk deadzone'),nl. */
+
+/* print location player right now */
+print_player_nearby :-
+    get_position(X,Y), print_player_loc(X,Y), !.

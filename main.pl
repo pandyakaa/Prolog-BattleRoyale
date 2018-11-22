@@ -8,11 +8,20 @@ start :-
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
-	main_loop.
+	main_loop,
+	asserta(playerPos(2,3)),
+	asserta(deadzone_area(0)),
+	asserta(deadzone_timer(5)), !,
+	repeat,
+			write('mau ngapain lo?- '),
+			read(Input),nl,
+			exec(Input), nl,
+			exec(tick), nl,
+	(Input == exit; endgame).
 
 /* Main loop of the program */
 main_loop :-
-  	welcome_info, print_player_nearby,
+  	print_title, print_player_nearby,
   	repeat,
   		set_seed(50), randomize,
   		write('\nDo something > '),
@@ -60,22 +69,22 @@ is_turn(listing) :- !.
 
 /* make a turn */
 is_turn(attack):-
-	generate_random_move(10),
+	generate_random_move(10).
 is_turn(atas) :-
 	enemy_attack,
-	generate_random_move(10),
+	generate_random_move(10).
 is_turn(kanan) :-
 	enemy_attack,
-	generate_random_move(10),
+	generate_random_move(10).
 is_turn(kiri) :-
 	enemy_attack,
-	generate_random_move(10),
+	generate_random_move(10).
 is_turn(bawah) :-
 	enemy_attack,
-	generate_random_move(10),
+	generate_random_move(10).
 is_turn(_) :-
 	generate_random_move(10),
-	enemy_attack,
+	enemy_attack.
 
   /* check if the game is finished */
   is_finished(Input) :-

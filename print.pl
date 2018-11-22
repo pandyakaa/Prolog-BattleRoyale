@@ -66,6 +66,10 @@ print_player_loc(X,Y) :-
     area(X, Y, Region), nl,
     print_loc(Region), write('There\'s an enemy in your sight'), nl, !.
 
+print_player_loc(X,Y) :-
+    area(X,Y,Region), nl,
+    print_loc(Region), !.
+
 print_loc(quarry):-
     write('Deep, large pits and stone grounds are around you. You are in quarry!'), nl, !.
 print_loc(military_base):-
@@ -117,10 +121,10 @@ print_bawah :-
     nl, write('You moved down'), nl.
 
 print_kanan :-
-    nl, write('You moved right'), nl
+    nl, write('You moved right'), nl.
 
 print_kiri :-
-    nl, write('You moved left'), nl
+    nl, write('You moved left'), nl.
 
 print_status:-
       player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
@@ -130,3 +134,11 @@ print_status:-
       write('Current Weapon         :'),write(Weapon),nl,
       write('Inventory              :'),write(Inventory),nl,
       write('Ammo [Ar,Smg]          :'),write(Ammo),nl.
+
+/* print fail attack */
+fail_attack :-
+    nl, write('There\'s no enemy in your sight !'), nl.
+
+/* print fail move */
+fail_move :-
+    nl, write('You can\'t move!'), nl.

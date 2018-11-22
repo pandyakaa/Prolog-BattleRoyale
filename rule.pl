@@ -25,7 +25,7 @@ enemy_attack :-
 
 enemy_atk(X,Y) :-
 				enemy(_,X,Y,_),
-				decrease_health(5),
+				decrease_Health(5),
 				print_decrease_health(5) , fail.
 
 enemy_atk(_,_) :- !.
@@ -88,11 +88,6 @@ drop(Object) :-
 drop(Object) :-
 				format('Kamu tidak punya ~w!',[Object]),nl.
 
-/* PRINT MAP */
-
-map :-
-				print_map(-1,-1),nl,!.
-
 /* MOVE */
 
 w :- has_started, step_up, print_atas, !.
@@ -118,7 +113,7 @@ status :-
 /* TAKE OBJECT */
 take(Object) :-
 		has_started, take_item(Object),nl,
-		formmat('You have picked ~w !' , [Object]),nl,!.
+		format('You have picked ~w !' , [Object]),nl,!.
 
 take(_) :-
 		has_started, nl ,
@@ -165,8 +160,8 @@ effect(Object) :-
 			give_effect(Type,Object).
 
 give_effect(medicine,Object) :-
-			medicine_rate(_,Object,Rate),
-			increase_Health(Object,Rate),
+			medicineHeal(_,Object,Rate),
+			increase_Health(Rate).
 			print_increase_health(Rate).
 
 give_effect(armor,Object) :-
