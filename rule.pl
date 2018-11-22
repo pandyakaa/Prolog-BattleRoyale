@@ -55,3 +55,27 @@ status :-
 	/* untuk command print_xx ada di file print */
 
 
+/* TAKE OBJECT */
+take(Object) :-
+	has_started, take_item(Object),nl, 
+	formmat('You have picked ~w !' , [Object]),nl,!.
+
+take(_) :-
+	has_started, nl ,
+	write('Item is not exist'),nl,fail.
+
+take_item(Object) :-
+	has_started,
+	player(X,Y,_,_,_,_,_),
+	location(X,Y,Object),
+	add_item(Object),
+	retract(location(X,Y,Object)),!.
+
+/* USE OBJECT */
+use(
+
+
+
+
+
+
