@@ -91,6 +91,25 @@ randomCoordinate(X, Y):-
 %attack-check
 
 
+%item addition and deletion
+
+add_item(Item):-
+    retract(player(X,Y,Health,Hunger,Thirst,Weapon,ItemList)),
+    append([Item],ItemList,NewItemList),
+    asserta(player(X,Y,Health,Hunger,Thirst,Weapon,NewItemList)).
+
+del_item(Item):-
+    retract(player(X,Y,Health,Hunger,Thirst,Weapon,ItemList)),
+    delete_one(Item,ItemList,NewItemList),
+    asserta(player(X,Y,Health,Hunger,Thirst,Weapon,NewItemList)).
+
+/* Command for delete one item */
+delete_one(_, [], []).
+delete_one(Term, [Term|Tail], Tail) :- !.
+delete_one(Term, [Head|Tail], [Head|Result]) :-
+    delete_one(Term, Tail, Result).
+
+
 
 /*enemy*/
 
@@ -104,17 +123,110 @@ generate_enemy(Id):-
   asserta(enemy(Id, X,Y,Health)).
 
 %health
-decrease_HealthE(Amount):-
+decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
     NewHealth =< 0,
     retract(enemy(Id,X,Y,Health)),
     asserta(enemy(Id,X,Y,0)).
+    %drop(X,Y).
 
-decrease_HealthE(Amount):-
+decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
     retract(enemy(Id,X,Y,Health)),
     asserta(enemy(Id,X,Y,NewHealth)).
+/*enemy exist*/
+
+check_enemy_exist :-
+	player(X,Y,_,_,_,_,_),
+	is_enemy_exist(X, Y),
+	write('There\'s enemy in your sigh'), nl, !.
+
+is_enemy_exist(X, Y) :-
+	enemy(_, A, B, _),
+	A =:= X, B =:= Y, !.
+
+
+/*nearby enemy*/
+check_enemy_nearby :-
+	player(X,Y,_,_,_,_,_),
+	enemy_nearby(X,Y).
+
+enemy_nearby(X, Y) :-
+	A is X, B is Y,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X-1, B is Y-1,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X, B is Y-1,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X+1, B is Y-1,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X-1, B is Y,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X+1, B is Y,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X-1, B is Y+1,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X, B is Y+1,
+	enemy(_, A, B, _), !.
+enemy_nearby(X, Y) :-
+	A is X+1, B is Y+1,
+	enemy(_, A, B, _), !.
+
+/*enemy_moves*/
+generate_random_move(0) :- !.
+generate_random_move(N) :- random_move(N), M is N-1, generate_random_move(M).
+
+
+random_move(Id) :-
+	random(1, 6, N),
+	step(Id, N), !.
+random_move(_) :- !.
+
+  step(Id, 1) :-
+  	stepup(Id), !.
+  step(Id, 2) :-
+  	stepdown(Id), !.
+  step(Id, 3) :-
+  	stepleft(Id), !.
+  step(Id, 4) :-
+  	stepright(Id), !.
+  step(Id, 5) :- !.
+
+  stepup(Id):-
+  	enemy(Id, X, CurrentY, Health),
+  	CurrentY > 0,
+  	NewY is CurrentY-1,
+  	retract(enemy(Id, X, CurrentY, Health)),
+  	asserta(enemy(Id, X, NewY, Health)).
+
+  stepdown(Id):-
+  	enemy(Id, X, CurrentY, Health),
+  	CurrentY < 20,
+  	NewY is CurrentY+1,
+  	retract(enemy(Id, X, CurrentY, Health)),
+  	asserta(enemy(Id, X, NewY, Health)).
+
+  stepleft(Id):-
+  	enemy(Id, CurrentX, Y, Health),
+  	CurrentX > 0,
+  	NewX is CurrentX-1,
+  	retract(enemy(Id, CurrentX, Y, Health)),
+  	asserta(enemy(Id, NewX, Y, Health)).
+
+  stepright(Id):-
+  	enemy(Id, CurrentX, Y, Health),
+  	CurrentX < 20,
+  	NewX is CurrentX+1,
+  	retract(enemy(Id, CurrentX, Y, Health)),
+  	asserta(enemy(Id, NewX, Y, Health)).
 
 %attack Player
