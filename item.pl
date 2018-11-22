@@ -1,9 +1,9 @@
 :- dynamic(location/3).
 :- dynamic(player/7).
-/* ITEM */ 
+/* ITEM */
 
 /*
-WEAPON		
+WEAPON
 NAME	DAMAGE	AMMO
 AKM	20	30
 SKS	30	25
@@ -43,6 +43,13 @@ itemType(medicine, painkiller).
 itemType(medicine, bandage).
 itemType(medicine, aidKit).
 itemType(medicine, medKit).
+itemType(ammo, ar).
+itemType(ammo, smg).
+itemType(weapon, akm).
+itemType(weapon, sks).
+itemType(weapon, kar).
+itemType(weapon, ump).
+itemType(weapon, uzi).
 
 
 /* MEDICINE HEAL RATE */
@@ -62,7 +69,7 @@ armorStrength(3, belt, 10).
 /* MAP area(X,Y, Region) */
 
 /* INITIALIZING MAP WITH WEAPON */
-initAllWeapon :- 
+initAllWeapon :-
     initWeapon(20), initWeaponForge(5).
 
 /* RANDOM WEAPON */
@@ -82,13 +89,13 @@ randomWeaponForge :-
 
 /* LOCATION OF WEAPON */
 initWeapon(0) :-!.
-initWeapon(N) :- 
+initWeapon(N) :-
     randomWeapon,
     M is N-1,
     initWeapon(M).
 
 initWeaponForge(0) :- !.
-initWeaponForge(N) :- 
+initWeaponForge(N) :-
     randomWeaponForge,
     M is N-1,
     initWeaponForge(M).
@@ -104,7 +111,7 @@ randomMedicine :-
     asserta(location(X,Y,A)).
 
 initMedicine(0) :- !.
-initMedicine(N) :- 
+initMedicine(N) :-
     randomMedicine,
     M is N-1,
     initMedicine(M).
@@ -159,7 +166,7 @@ initItems :-
 
 
 /* MEDICINE EFFECT */
-medicineEffect(X) :- 
+medicineEffect(X) :-
     medicineHeal(_, X, N),
     increase_Health(N).
 
@@ -167,4 +174,3 @@ medicineEffect(X) :-
 armorEffect(X) :-
     armorStrength(_, X, N),
     set_Armor(N).
-
