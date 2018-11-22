@@ -1,3 +1,5 @@
+:- dynamic(location/3).
+:- dynamic(player/7).
 /* ITEM */ 
 
 /*
@@ -53,7 +55,6 @@ medicineHeal(4, medKit, 100).
 armorStrength(1, helmet, 20).
 armorStrength(2, vest, 50).
 armorStrength(3, belt, 10).
-/*armorStrength(4, helmet, 20).*/
 
 
                             /* ======== DECLARING RULESS ======== */
@@ -67,15 +68,15 @@ initAllWeapon :-
 /* RANDOM WEAPON */
 randomWeapon :-
     repeat,
-    random(1, 6, N), weaponName(N, A),
+    random(1, 5, N), weaponName(N, A),
     random(0, 20, X), random(0, 20, Y),
     grid(X, Y, Loc), Loc \== blank,
     asserta(location(X,Y,A)).
 
 
 randomWeaponForge :-
-    random(1,6,N), weaponName(N,A),
-    random(7,20, X), random(17,20,Y),
+    random(1, 5, N), weaponName(N,A),
+    random(7, 20, X), random(17, 20, Y),
     asserta(location(X,Y,A)).
 
 
@@ -92,15 +93,78 @@ initWeaponForge(N) :-
     M is N-1,
     initWeaponForge(M).
 
+
 /* INITIALIZIG MAP WITH MEDICINE */
+randomMedicine :-
+    repeat,
+    random(1,5, N), medicineHeal(N, A, _),
+    random(0, 20, X), random(0, 20, Y),
+    grid(X, Y, Loc),
+    Loc \== blank,
+    asserta(location(X,Y,A)).
+
+initMedicine(0) :- !.
+initMedicine(N) :- 
+    randomMedicine,
+    M is N-1,
+    initMedicine(M).
+
 initAllMedicine:-
     initMedicine(20).
 
-/*initMedicine(0) :- !.
-initMedicine(N) :- */
+
+/* INITIALIZING ARMOR */
+randomArmor:-
+    repeat,
+    random(1, 3, N), armorStrength(N, A, _),
+    random(0, 20, X), random(0,20, Y),
+    grid(X,Y,Loc),
+    Loc \== blank,
+    asserta(location(X,Y,A)).
+
+initArmor(0) :- !.
+initArmor(N) :-
+    randomArmor,
+    M is N-1,
+    initArmor(M).
+
+initAllArmor:-
+    initArmor(20).
+
+
+
+/* INITIALIZING AMMO */
+randomAmmo:-
+    repeat,
+    random(1, 3, N), ammoReload(N, A, _),
+    random(0, 20, X), random(0,20, Y),
+    grid(X,Y,Loc),
+    Loc \== blank,
+    asserta(location(X,Y,A)).
+
+initAmmo(0) :- !.
+initAmmo(N) :-
+    randomAmmo,
+    M is N-1,
+    initAmmo(M).
+
+initAllAmmo:-
+    initAmmo(20).
+
+
 
 /* INITIALIZING LOCATION OD THE ITEM */
 initItems :-
-    initWeapon, initMedicine, initArmor, initAmmo, !.
+    initAllWeapon, initAllMedicine, initAllArmor, initAllAmmo, !.
 
+
+/* MEDICINE EFFECT */
+medicineEffect(X) :- 
+    medicineHeal(_, X, N),
+    increase_Health(N).
+
+/* SET ARMOR */
+armorEffect(X) :-
+    armorStrength(_, X, N),
+    set_Armor(N).
 
