@@ -1,6 +1,6 @@
 # Prolog-BattleRoyale
 
-Make a game Battle Royale ( PUBG like ) based on GNU Prolog for IF-2121 Logika Informatika
+Make a Battle Royale game ( PUBG like ) based on GNU Prolog for IF-2121 Logika Informatika
 
 Team : 
 
