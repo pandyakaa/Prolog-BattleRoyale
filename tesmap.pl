@@ -16,7 +16,7 @@ area(X, Y, Region) :- X>= 10, X=<15, Y>=13, Y=<15, Region = stalber.
 
 start :-
     readme,
-    %initTry,
+    asserta(playerPos(2,3)).
     asserta(deadzone_area(0)),
     asserta(deadzone_timer(5)), !,
     repeat, 
@@ -29,7 +29,7 @@ start :-
 exec(map) :- map, !.
 exec(tick) :- !, deadzone_counter.
 exec(exit) :- write('babay babyansyah'), nl.
-exec(_) :- write('yeee kaga tau ni mo ngapain'), !.
+%exec(_) :- write('yeee kaga tau ni mo ngapain'), !.
 
 readme:-
     write('JADI INI CHECKPOINT AWAL BUAT NGECEK MAP.'),nl,
@@ -79,8 +79,62 @@ printMap(X,Y) :-
     (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), !,
     write('X'),
     Xnew is X+1, printMap(Xnew, Y).
+printMap(A,B) :-
+    playerPos(X,Y),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xmin, B == Ymin,
+    printPosition(Xmin,Ymin), !,
+    Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == X, B == Ymin,
+  printPosition(X,Ymin), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == Xplus, B == Ymin,
+  printPosition(Xplus,Ymin), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == Xmin, B == Y,
+  printPosition(Xmin,Y), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == X, B == Y,
+  printPosition(X,Y), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == Xplus, B == Y,
+  printPosition(Xplus,Y), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == Xmin, B == Yplus,
+  printPosition(Xmin,Yplus), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == X, B == Yplus,
+  printPosition(X,Yplus), !,
+  Anew is A+1, printMap(Anew,B).
+printMap(A,B) :-
+  playerPos(X,Y),
+  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+  A == Xplus, B == Yplus,
+  printPosition(Xplus,Yplus), !,
+  Anew is A+1, printMap(Anew,B).
 
-printMap(X,Y) :- Xnew is X + 1, write(‘-’), !, printMap(Xnew, Y).
+printMap(X,Y) :- Xnew is X + 1, write('-'), !, printMap(Xnew, Y).
 
 map :-
     write('di hutan main kelinci'), nl,
@@ -89,7 +143,7 @@ map :-
 
 
  /*Cek apakah move masuk deadzone atau tidak*/
- is_able_move(X,_):-deadzone_area(A),X@=<A,!,fail.
+is_able_move(X,_):-deadzone_area(A),X@=<A,!,fail.
 is_able_move(_,Y):-deadzone_area(A),Y@=<A,!,fail.
 is_able_move(X,_):-deadzone_area(A),Aright is 19-A,X@>=Aright,!,fail.
 is_able_move(_,Y):-deadzone_area(A),Aright is 19-A,Y@>=Aright,!,fail.
