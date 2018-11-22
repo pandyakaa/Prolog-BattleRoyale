@@ -67,6 +67,46 @@ randomCoordinate(X, Y):-
 
 
     health_Status(Health):- player(_,_,Health,_,_,_,_).
+%replace
+
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
+
+
+%Ammo
+    increase_Ammo(Amount,ar):-
+      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      nth0(0,Ammo,Ar),
+      NewAr is Ar+Amount,
+      replace(Ammo,0,NewAr,NewAmmo),
+      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+
+    decrease_Ammo(Amount,ar):-
+      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      nth0(0,Ammo,Ar),
+      NewAr is Ar-Amount,
+      replace(Ammo,0,NewAr,NewAmmo),
+      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+
+    increase_Ammo(Amount,smg):-
+      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      nth0(1,Ammo,Smg),
+      NewSmg is Smg+Amount,
+      replace(Ammo,1,NewSmg,NewAmmo),
+      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+
+    decrease_Ammo(Amount,smg):-
+      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      nth0(1,Ammo,Smg),
+      NewSmg is Smg-Amount,
+      replace(Ammo,1,NewSmg,NewAmmo),
+      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+
 
 
 %Armor
