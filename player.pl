@@ -94,22 +94,48 @@ randomCoordinate(X, Y):-
 %item addition and deletion
 
 add_item(Item):-
-    retract(player(X,Y,Health,Hunger,Thirst,Weapon,ItemList)),
-    append([Item],ItemList,NewItemList),
-    asserta(player(X,Y,Health,Hunger,Thirst,Weapon,NewItemList)).
+    retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    append([Item],Inventory,NewInventory),
+    asserta(player(X,Y,Health,Armor,Weapon,NewInventory,Ammo)).
 
 del_item(Item):-
-    retract(player(X,Y,Health,Hunger,Thirst,Weapon,ItemList)),
-    delete_one(Item,ItemList,NewItemList),
-    asserta(player(X,Y,Health,Hunger,Thirst,Weapon,NewItemList)).
+  retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+  delete_one(Item,Inventory,NewInventory),
+  asserta(player(X,Y,Health,Armor,Weapon,NewInventory,Ammo)).
 
-/* Command for delete one item */
 delete_one(_, [], []).
 delete_one(Term, [Term|Tail], Tail) :- !.
 delete_one(Term, [Head|Tail], [Head|Result]) :-
     delete_one(Term, Tail, Result).
 
+/*move*/
+step_up:-
+    player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
+    CurrentY > 0,
+    Y is CurrentY-1,
+    retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
+step_down:-
+    player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
+    CurrentY < 20,
+    Y is CurrentY+1,
+    retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+
+step_left:-
+    player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
+    CurrentX > 0,
+    X is CurrentX-1,
+    retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+
+step_right:-
+    player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
+    CurrentX < 20,
+    X is CurrentX+1,
+    retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
 /*enemy*/
 
