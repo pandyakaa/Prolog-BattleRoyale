@@ -16,7 +16,7 @@ area(X, Y, Region) :- X>= 10, X=<15, Y>=13, Y=<15, Region = stalber.
 
 start :-
     readme,
-    asserta(playerPos(2,3)).
+    asserta(playerPos(2,3)),
     asserta(deadzone_area(0)),
     asserta(deadzone_timer(5)), !,
     repeat, 
