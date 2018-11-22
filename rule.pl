@@ -4,19 +4,19 @@
 
 attack :-
 				player(X,Y,_,_,Weapon,_,[_,_]),
-				weapon_atk(Weapon,WeaponDamage),
+				weaponDamage(Weapon,Damage),
 				enemy(_,X,Y,_),
-				atk_enemy(X,Y,WeaponDamage,Atk),!.
+				atk_enemy(X,Y,Damage),!.
 attack :-
 				fail_attack,fail.
 
-atk_enemy(X,Y,WeaponDamage,EnemyAtk) :-
+atk_enemy(X,Y,Damage) :-
 				enemy(Id,X,Y,_),
-				print_inflict_damage(WeaponDamage),
-				decrease_Health(EnemyAtk),
-				print_decrease_health(EnemyAtk),
-				decrease_HealthE(Id,WeaponDamage),fail.
-atk_enemy(_,_,_,_) :- !.
+				print_inflict_damage(Damage),
+				decrease_Health(5),
+				print_decrease_health(5),
+				decrease_HealthE(Id,Damage),fail.
+atk_enemy(_,_,_) :- !.
 
 /* ENEMY ATTACK */
 enemy_attack :-
@@ -81,7 +81,7 @@ drop(Object) :-
 				player(X,Y,_,_,_,_,_) , !,
 				player(_,_,_,_,_,Inventory,_) , !,
 				member(Object,Inventory),
-				delete_item(Object),
+				del_item(Object),
 				asserta(location(X,Y,Object)),
 				format('You dropped ~w!',[Object]),nl,!.
 
@@ -95,16 +95,16 @@ map :-
 
 /* MOVE */
 
-atas :- has_started, gerak_atas, print_atas, !.
+atas :- has_started, step_up, print_atas, !.
 atas :- fail.
-bawah :- has_started, gerak_bawah, print_bawah , !.
+bawah :- has_started, step_down, print_bawah , !.
 bawah :- fail.
-kanan :- has_started, gerak_kanan , print_kanan ,!.
+kanan :- has_started, step_right , print_kanan ,!.
 kanan :- fail.
-kiri :- has_started, gerak_kiri , print_kiri , !.
+kiri :- has_started, step_left , print_kiri , !.
 kiri :- fail.
 
-	/* untuk command gerak_xx ada di file player */
+	/* untuk command step_xx ada di file player */
 
 /* PRINT STATUS */
 
@@ -136,7 +136,7 @@ use(Object) :-
 		player(_,_,_,_,Weapon,Inventory,_),
 		member(Object,Inventory),
 		weaponName(_, Object),
-		delete_item(Object),
+		del_item(Object),
 		set_weapon(Object),
 		add_item(Weapon),nl,
 		format('You switched your weapon to ~w !', [Object]), nl, !.
@@ -145,7 +145,7 @@ use(Object) :-
 				player(_,_,_,_,Weapon,Inventory,_),
 				member(Object,Inventory),
 				weaponName(_, Object),
-				delete_item(Object),
+				del_item(Object),
 				set_weapon(Object),
 				add_item(Weapon),nl,
 				format('You switched your weapon to ~w !', [Object]), nl, !.
