@@ -1,14 +1,13 @@
-:- dynamic(player/6).
-:- dynamic(ammo/2).
+:- dynamic(player/7).
+
 
 /*Initial Player Stats*/
 initHealth(100).
 initArmor(0).
 initWeapon(hand).
 initInventory([]).
-/*Initial Player Ammo*/
-init_Ar(0).
-init_Smg(0).
+initAmmo([0,0]).
+
 
 randomCoordinate(X, Y):-
     random(1, 20, A), random(1, 20, B),
@@ -21,73 +20,75 @@ randomCoordinate(X, Y):-
         initWeapon(Weapon),
         initInventory(Inventory),
         randomCoordinate(X, Y),
-        asserta(player(X,Y,Health,Armor,Weapon,Inventory)), !.
+        initAmmo(Ammo),
+        asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), !.
 
-    init_Ammo:-
-	init_Ar(Ar_Ammo),
-	init_Smg(Smg_Ammo),
-	
+
+
 
 
 
 %Health
     increase_Health(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Amount+Health,
         NewHealth > 100,
-        retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-        asserta(player(X,Y,100,Armor,Weapon,Inventory)).
+        retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,100,Armor,Weapon,Inventory,Ammo)).
     increase_Health(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Amount+Health,
-        retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory)).
+        retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory,Ammo)).
 
     decrease_Health(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Health - Amount,
         Armor = 0,
         NewHealth < 0,
-        retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-        asserta(player(X,Y,0,Armor,Weapon,Inventory)).
+        retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,0,Armor,Weapon,Inventory,Ammo)).
 
     decrease_Health(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Health - Amount,
         Armor = 0,
-        retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory)).
+        retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory,Ammo)).
 
     decrease_Health(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Health + Armor - Amount,
         decrease_Armor(Armor),
-        player(_,_,_,NewArmor,_,_),
-        retract(player(X,Y,Health,NewArmor,Weapon,Inventory)),
-        asserta(player(X,Y,NewHealth,NewArmor,Weapon,Inventory)).
+        player(_,_,_,NewArmor,_,_,_),
+        retract(player(X,Y,Health,NewArmor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,NewHealth,NewArmor,Weapon,Inventory,Ammo)).
 
 
-    health_Status(Health):- player(_,_,Health,_,_,_).
+    health_Status(Health):- player(_,_,Health,_,_,_,_).
 
 
 %Armor
-    increase_Armor(Amount):-
-        player(X,Y,Health,Armor,Weapon,Inventory),
-        NewArmor is Amount + Armor,
-        retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-        asserta(player(X,Y,Health,NewArmor,Weapon,Inventory)).
+    set_Armor(Amount):-
+        player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+        retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+        asserta(player(X,Y,Health,Amount,Weapon,Inventory,Ammo)).
 
     decrease_Armor(Amount):-
-            player(X,Y,Health,Armor,Weapon,Inventory),
+            player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
             NewArmor is Armor - Amount,
             NewArmor < 0,
-            retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-            asserta(player(X,Y,Health,0,Weapon,Inventory)).
+            retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+            asserta(player(X,Y,Health,0,Weapon,Inventory,Ammo)).
 
     decrease_Armor(Amount):-
-            player(X,Y,Health,Armor,Weapon,Inventory),
+            player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
             NewArmor is Armor - Amount,
-            retract(player(X,Y,Health,Armor,Weapon,Inventory)),
-            asserta(player(X,Y,Health,NewArmor,Weapon,Inventory)).
+            retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+            asserta(player(X,Y,Health,NewArmor,Weapon,Inventory,Ammo)).
+
+%attack-check
+
+    
 
 /*main for test*/
