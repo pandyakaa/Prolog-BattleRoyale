@@ -39,7 +39,7 @@ has_started :-
 
 /* HELP */
 help :-
-				has_started,print_help.
+				has_started,print_commands.
 
 /* QUIT */
 
@@ -95,14 +95,14 @@ map :-
 
 /* MOVE */
 
-atas :- has_started, step_up, print_atas, !.
-atas :- fail.
-bawah :- has_started, step_down, print_bawah , !.
-bawah :- fail.
-kanan :- has_started, step_right , print_kanan ,!.
-kanan :- fail.
-kiri :- has_started, step_left , print_kiri , !.
-kiri :- fail.
+w :- has_started, step_up, print_atas, !.
+w :- fail.
+s :- has_started, step_down, print_bawah , !.
+s :- fail.
+d :- has_started, step_right , print_kanan ,!.
+d :- fail.
+a :- has_started, step_left , print_kiri , !.
+a :- fail.
 
 	/* untuk command step_xx ada di file player */
 
@@ -166,11 +166,11 @@ effect(Object) :-
 
 give_effect(medicine,Object) :-
 			medicine_rate(_,Object,Rate),
-			increase_Health(Rate),
+			increase_Health(Object,Rate),
 			print_increase_health(Rate).
 
 give_effect(armor,Object) :-
-		armor_rate(_Object,Rate),
+		armor_rate(_,Object,Rate),
 		set_Armor(Rate),
 		print_armor_rate(Object,Rate).
 
