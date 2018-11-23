@@ -26,7 +26,7 @@ initTry:-
     asserta(deadzone_area(0)).
 
 endgame :-
-    playerPos(X,Y),
+    player(X,Y,_,_,_,_,_),
     deadzone_area(A),
     (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,A@>=Aright), !,
     write('cupu lo'),nl.

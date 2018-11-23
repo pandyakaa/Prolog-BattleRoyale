@@ -1,17 +1,15 @@
 /* File MAIN */
 
 /* START THE GAME */
-
+ 
 start :- g_read(started, X), X = 1, write('Game has already started'), nl, fail, !.
 start :-
 	g_read(started, X), X = 0, !,
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
+	asserta(deadzone_timer(7)), !,
 	main_loop,
-	asserta(playerPos(2,3)),
-	asserta(deadzone_area(0)),
-	asserta(deadzone_timer(5)), !,
 	repeat,
 			write('mau ngapain lo?- '),
 			read(Input),nl,
@@ -25,17 +23,21 @@ main_loop :-
   	repeat,
   		set_seed(50), randomize,
   		write('\nDo something > '),
-  		read(Input),
+  		read(Input), nl,
   		%is_input(Input),
-  		call(Input),
+		call(Input), nl,
+		exec(tick), nl,
   	is_turn(Input), is_finished(Input), !.
 
 /* Init everything when game started without load */
 init_everything :-
     	initItems,
-    	init_Player,
+		init_Player,
+		initDeadzone,
     	init_enemy(10).
 
+initDeadzone :-
+	asserta(deadzone_area(0)).
 /* Check if input is valid */
 %is_input(listing) :-
 % 	nl, write(' :) :( '), nl, !, fail.
