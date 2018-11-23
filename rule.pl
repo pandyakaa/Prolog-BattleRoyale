@@ -66,15 +66,15 @@ look :-
 				/* Print sekitar */
 				print_north(N_X,N_Y), print_south(S_X,S_Y),
 				print_east(E_X,E_Y), print_west(W_X,W_Y), nl,
-				print_format(NW_X,NW_Y),!,
-				print_format(N_X,N_Y),!,
-				print_format(NE_X,NE_Y),!,nl,
-				print_format(W_X,W_Y),!,
-				print_format(C_X,C_Y),!,
-				print_format(E_X,E_Y),!, nl,
-				print_format(SW_X,SW_Y),!,
-				print_format(S_X,S_Y),!,
-				print_format(SE_X,SE_Y),!,nl.
+				printMap(NW_X,NW_Y),!,
+				printMap(N_X,N_Y),!,
+				printMap(NE_X,NE_Y),!,nl,
+				printMap(W_X,W_Y),!,
+				printMap(C_X,C_Y),!,
+				printMap(E_X,E_Y),!, nl,
+				printMap(SW_X,SW_Y),!,
+				printMap(S_X,S_Y),!,
+				printMap(SE_X,SE_Y),!,nl.
 
 /* DROP ITEM */
 drop(Object) :-

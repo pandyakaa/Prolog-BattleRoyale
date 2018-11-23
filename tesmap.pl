@@ -175,38 +175,6 @@ print_player_nearby :-
     get_position(X,Y), print_player_loc(X,Y), !.
 
 
-/* INI TOLONG DIBENERIN YAK */
-/*print_format(X,Y):-
-    player(X,Y,_,_,_,_,_),
-    print_player.
-print_format(X,Y):-
-    enemy(_,X,Y,_,_),
-    print_enemy.
-print_format(X,Y):-
-    location(X,Y,Item),
-    weapon_id(_,Item),
-    print_weapon.
-print_format(X,Y):-
-    location(X,Y,Item),
-    type_item(medicine,Item),
-    print_medicine.
-print_format(X,_):-
-    X < 0,
-    print_border.
-print_format(X,_):-
-    X > 9,
-    print_border.
-print_format(_,Y):-
-    Y < 0,
-    print_border.
-print_format(_,Y):-
-    Y > 19,
-    print_border.
-print_format(X,Y):-
-  area(X,Y,Z),
-  Z = blank,
-  print_inaccessible.
-print_format(_,_):-print_accessible.*/
 
 /* print nearby location */
 print_north(X,Y) :-
@@ -237,16 +205,3 @@ print_nearby_loc(Direction, severny):-
     format('In the ~w, you see Severny', [Direction]), nl, !.
 print_nearby_loc(Direction, stalber):-
     format('In the ~w, you see Stalber', [Direction]), nl, !.
-
-/* print movement */
-print_atas:-
-    nl, write('From your place, you move to the north...'), nl.
-
-print_bawah :-
-    nl, write('From your place, you move to the south...'), nl.
-
-print_kanan :-
-    nl, write('From your place, you move to the east...'), nl.
-
-print_kiri :-
-    nl, write('From your place, you move to the west...'), nl.
