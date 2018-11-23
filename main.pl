@@ -9,13 +9,7 @@ start :-
 	set_seed(50), randomize,
 	init_everything,
 	asserta(deadzone_timer(7)), !,
-	main_loop,
-	repeat,
-			write('mau ngapain lo?- '),
-			read(Input),nl,
-			exec(Input), nl,
-			exec(tick), nl,
-	(Input == exit; endgame).
+	main_loop.
 
 /* Main loop of the program */
 main_loop :-

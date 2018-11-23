@@ -11,7 +11,7 @@ initAmmo([0,0]).
 
 
 randomCoordinate(X, Y):-
-    random(1, 20, A), random(1, 20, B),
+    random(2, 18, A), random(2, 18, B),
     X is A, Y is B.
 
 
@@ -162,14 +162,14 @@ delete_one(Term, [Head|Tail], [Head|Result]) :-
 step_up:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
     CurrentY > 0,
-    Y is CurrentY+1,
+    Y is CurrentY-1,
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
 step_down:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
     CurrentY < 20,
-    Y is CurrentY-1,
+    Y is CurrentY+1,
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 

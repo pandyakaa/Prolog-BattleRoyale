@@ -75,14 +75,14 @@ initAllWeapon :-
 randomWeapon :-
     repeat,
     random(1, 5, N), weaponName(N, A),
-    random(0, 20, X), random(0, 20, Y),
+    random(0, 19, X), random(0, 19, Y),
     area(X, Y, Loc), Loc \== blank,
     asserta(location(X,Y,A)).
 
 
 randomWeaponForge :-
     random(1, 5, N), weaponName(N,A),
-    random(7, 20, X), random(17, 20, Y),
+    random(7, 19, X), random(17, 19, Y),
     asserta(location(X,Y,A)).
 
 
@@ -104,7 +104,7 @@ init_weaponForge(N) :-
 randomMedicine :-
     repeat,
     random(1,5, N), medicineHeal(N, A, _),
-    random(0, 20, X), random(0, 20, Y),
+    random(0, 19, X), random(0, 19, Y),
     area(X, Y, Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).
@@ -123,7 +123,7 @@ initAllMedicine:-
 randomArmor:-
     repeat,
     random(1, 3, N), armorStrength(N, A, _),
-    random(0, 20, X), random(0,20, Y),
+    random(0, 19, X), random(0, 19, Y),
     area(X,Y,Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).
@@ -143,7 +143,7 @@ initAllArmor:-
 randomAmmo:-
     repeat,
     random(1, 3, N), ammoReload(N, A, _),
-    random(0, 20, X), random(0,20, Y),
+    random(1, 19, X), random(1,19, Y),
     area(X,Y,Loc),
     Loc \== blank,
     asserta(location(X,Y,A)).

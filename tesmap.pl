@@ -85,6 +85,44 @@ printPosition(X,Y) :-
 printPosition(_,_) :- write('-').
 
 
+
+/* LOOK */
+printLook(X,Y) :-
+    deadzone_area(A),
+    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), 
+    write('X').
+
+printLook(X,Y) :-
+    player(X, Y, _, _, _, _, _),
+    write('P').
+
+printLook(X,Y) :-
+    location(X,Y, Item),
+    itemType(medicine, Item),
+    write('M').
+
+printLook(X,Y) :-
+    location(X, Y, Item),
+    itemType(armor, Item),
+    write('R').
+
+printLook(X,Y) :-
+    location(X,Y, Item),
+    itemType(ammo,  Item),
+    write('A').
+
+printLook(X,Y) :-
+    location(X,Y, Item),
+    itemType(weapon, Item),
+    write('W').
+
+printLook(X,Y) :-
+    enemy(_, X, Y, _),
+    write('E').
+
+printLook(_,_) :- write('-').
+
+
 /* INI TOLONG DIBENERIN YAK */
 printMap(19,19) :- printPosition(19,19), nl, !.
 printMap(19, Y):- Ynew is Y + 1, printPosition(19,Y), nl, !, printMap(0,Ynew).
@@ -93,66 +131,70 @@ printMap(X,Y) :-
     (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), !,
     write('X'),
     Xnew is X+1, printMap(Xnew, Y).
-printMap(A,B) :-
-    playerPos(X,Y),
+printMap(X,Y) :-
+    printPosition(X,Y), !,
+    Xnew is X + 1, printMap(Xnew,Y).
+/*printMap(A,B) :-
+    player(X,Y,_,_,_,_,_),
     Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
     A == Xmin, B == Ymin,
     printPosition(Xmin,Ymin), !,
     Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == X, B == Ymin,
-  printPosition(X,Ymin), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == X, B == Ymin,
+    printPosition(X,Ymin), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == Xplus, B == Ymin,
-  printPosition(Xplus,Ymin), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xplus, B == Ymin,
+    printPosition(Xplus,Ymin), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == Xmin, B == Y,
-  printPosition(Xmin,Y), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xmin, B == Y,
+    printPosition(Xmin,Y), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == X, B == Y,
-  printPosition(X,Y), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == X, B == Y,
+    printPosition(X,Y), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == Xplus, B == Y,
-  printPosition(Xplus,Y), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xplus, B == Y,
+    printPosition(Xplus,Y), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == Xmin, B == Yplus,
-  printPosition(Xmin,Yplus), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xmin, B == Yplus,
+    printPosition(Xmin,Yplus), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == X, B == Yplus,
-  printPosition(X,Yplus), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == X, B == Yplus,
+    printPosition(X,Yplus), !,
+    Anew is A+1, printMap(Anew,B).
 printMap(A,B) :-
-  playerPos(X,Y),
-  Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-  A == Xplus, B == Yplus,
-  printPosition(Xplus,Yplus), !,
-  Anew is A+1, printMap(Anew,B).
+    player(X,Y,_,_,_,_,_),
+    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
+    A == Xplus, B == Yplus,
+    printPosition(Xplus,Yplus), !,
+    Anew is A+1, printMap(Anew,B).*/
 
 printMap(X,Y) :- Xnew is X + 1, write('-'), !, printMap(Xnew, Y).
 
 map :-
     write('di hutan main kelinci'), nl,
-    write('tes map hutan:'), nl, nl,
+    write('map hutan:'), nl, nl,
+    %player(X,Y, _, _, _, _, _),
     printMap(0,0).
 
 
