@@ -49,9 +49,38 @@ printPosition(X,Y) :-
   write('X').
 
 printPosition(X,Y) :-
-    playerPos(A,B),
+    player(A, B, _, _, _, _, _),
     A==X, B==Y, !,
     write('P').
+
+printPosition(X,Y) :-
+    location(A,B, Item),
+    itemType(medicine, Item),
+    A==X, B==Y, !,
+    write('M').
+
+printPosition(X,Y) :-
+    location(A, B, Item),
+    itemType(armor, Item),
+    A==X, B==Y, !,
+    write('R').
+
+printPosition(X,Y) :-
+    location(A,B, Item),
+    itemType(ammo,  Item),
+    A==X, B==Y, !,
+    write('A').
+
+printPosition(X,Y) :-
+    location(A,B, Item),
+    itemType(weapon, Item),
+    A==X, B==Y, !,
+    write('W').
+
+printPosition(X,Y) :-
+    enemy(_, A, B, _),
+    A==X, B==Y, !,
+    write('E').
 
 printPosition(_,_) :- write('-').
 
@@ -145,8 +174,9 @@ is_able_move(_,_).
 print_player_nearby :-
     get_position(X,Y), print_player_loc(X,Y), !.
 
+
 /* INI TOLONG DIBENERIN YAK */
-print_format(X,Y):-
+/*print_format(X,Y):-
     player(X,Y,_,_,_,_,_),
     print_player.
 print_format(X,Y):-
@@ -176,7 +206,7 @@ print_format(X,Y):-
   area(X,Y,Z),
   Z = blank,
   print_inaccessible.
-print_format(_,_):-print_accessible.
+print_format(_,_):-print_accessible.*/
 
 /* print nearby location */
 print_north(X,Y) :-
@@ -189,30 +219,26 @@ print_west(X,Y) :-
     area(X,Y,Region), print_nearby_loc(west, Region).
 
 /* INI TOLONG DIBENERIN YAK */
-print_nearby_loc(Direction, kantin_borju):-
-    format('In the ~w, you see Kantin Borju', [Direction]), nl, !.
-print_nearby_loc(Direction, kandom):-
-    format('In the ~w, you see Kandang Domba', [Direction]), nl, !.
-print_nearby_loc(Direction, intel):-
-    format('In the ~w, you see Indonesia Tenggelam', [Direction]), nl, !.
-print_nearby_loc(Direction, ruang_rektor):-
-    format('In the ~w, you see Ruang Rektor', [Direction]), nl, !.
-print_nearby_loc(Direction, labtek_v):-
-    format('In the ~w, you see Labtek V', [Direction]), nl, !.
-print_nearby_loc(Direction, ruang_ujian):-
-    format('In the ~w, you see Test Room', [Direction]), nl, !.
-print_nearby_loc(Direction, sadikin):-
-    format('In the ~w, you see Sadikin', [Direction]), nl, !.
-print_nearby_loc(Direction, perpustakaan):-
-    format('In the ~w, you see Library', [Direction]), nl, !.
-print_nearby_loc(Direction, sacred_path):-
-    format('In the ~w, you see something...', [Direction]), nl, !.
-print_nearby_loc(Direction, secret_path):-
-    format('In the ~w, you see... Wait.. What is that place?', [Direction]), nl, !.
-print_nearby_loc(Direction, blank):-
-    format('In the ~w, there\'s restricted place.. You can\'t go there!', [Direction]), nl, !.
+print_nearby_loc(Direction, quarry):-
+    format('In the ~w, you see Quarry', [Direction]), nl, !.
+print_nearby_loc(Direction, military_base):-
+    format('In the ~w, you see Military Base', [Direction]), nl, !.
+print_nearby_loc(Direction, mylta):-
+    format('In the ~w, you see Mylta', [Direction]), nl, !.
+print_nearby_loc(Direction, georgopool):-
+    format('In the ~w, you see Georgopool', [Direction]), nl, !.
+print_nearby_loc(Direction, pochinki):-
+    format('In the ~w, you see Pochinki', [Direction]), nl, !.
+print_nearby_loc(Direction, yasnaya):-
+    format('In the ~w, you see Yasnaya', [Direction]), nl, !.
+print_nearby_loc(Direction, zharki):-
+    format('In the ~w, you see Zharki', [Direction]), nl, !.
+print_nearby_loc(Direction, severny):-
+    format('In the ~w, you see Severny', [Direction]), nl, !.
+print_nearby_loc(Direction, stalber):-
+    format('In the ~w, you see Stalber', [Direction]), nl, !.
 
-* print movement */
+/* print movement */
 print_atas:-
     nl, write('From your place, you move to the north...'), nl.
 
