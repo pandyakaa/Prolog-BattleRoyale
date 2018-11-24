@@ -1,7 +1,7 @@
 /* File MAIN */
 
 /* START THE GAME */
- 
+
 start :- g_read(started, X), X = 1, write('Game has already started'), nl, fail, !.
 start :-
 	g_read(started, X), X = 0, !,
@@ -20,7 +20,7 @@ main_loop :-
   		read(Input), nl,
   		%is_input(Input),
 		call(Input), nl,
-		exec(tick), nl,
+		exec(tick), nl, is_turn(Input),
   	(Input == quit; endGame).
 
 /* Init everything when game started without load */
@@ -87,8 +87,8 @@ is_turn(_) :-
   	Input = quit, !.
   is_finished(_) :-
   	\+ enemy(_,_,_,_), nl,
-  	write('You have won the game! Congrats!'), nl, quit, !.
+  print_win, nl, quit, !.
   is_finished(_) :-
   	player(_,_,Health,_,_,_,_), ! ,
   	Health =< 0, nl,
-  	write('You LOSEEEEE!!!!'), nl, quit,!.
+  print_lose, nl, quit,!.
