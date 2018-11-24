@@ -22,7 +22,8 @@ attack :-
 	fail_attack,fail.
 
 atk_enemy(X,Y,Damage) :-
-	enemy(Id,X,Y,_),
+	enemy(Id,X,Y,Health),
+	Health>0,
 	print_inflict_damage(Damage),
 	decrease_Health(5),
 	print_decrease_health(5),
