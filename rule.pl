@@ -5,7 +5,7 @@
 attack :-
 	player(X,Y,_,_,Weapon,_,[_,_]),
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
@@ -15,7 +15,7 @@ attack :-
 
 attack :-
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
@@ -30,7 +30,7 @@ atk_enemy(X,Y,Damage) :-
 
 atk_enemy(_,_,_) :- !.
 
-/* ENEMY ATTACK */ 
+/* ENEMY ATTACK */
 enemy_attack :-
 				player(X,Y,_,_,_,_,_),
 				enemy_atk(X,Y).
@@ -94,7 +94,7 @@ drop(Object) :-
 	player(X,Y,_,_,_,_,_) , !,
 	player(_,_,_,_,_,Inventory,_) , !,
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
@@ -105,7 +105,7 @@ drop(Object) :-
 
 drop(Object) :-
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
@@ -137,20 +137,11 @@ status :-
 take(Object) :-
 	has_started, take_item(Object),nl,
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
 	format('You have picked ~w !' , [Object]),nl,!.
-
-take(_) :-
-	has_started, nl ,
-	deadzone_timer(T),
-    Tn is T-1, 
-    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	write('Item is not exist'),nl,fail.
 
 take_item(Object) :-
 		has_started,
@@ -159,10 +150,21 @@ take_item(Object) :-
 		add_item(Object),
 		retract(location(X,Y,Object)),!.
 
+take(_) :-
+	has_started, nl ,
+	deadzone_timer(T),
+    Tn is T-1,
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
+	write('Item is not exist'),nl,fail.
+
+
+
 /* USE OBJECT */
 use(Object) :-
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
@@ -176,18 +178,18 @@ use(Object) :-
 
 use(Object) :-
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
 	player(_,_,_,_,_,Inventory,_),
-	member(Object, ListItem),
+	member(Object, Inventory),
 	del_item(Object),
 	effect(Object), nl, !.
 
 use(_) :-
 	deadzone_timer(T),
-    Tn is T-1, 
+    Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
