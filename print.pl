@@ -1,5 +1,5 @@
 
-
+/*Display*/
 print_title :-
   nl,
 write('PPPPPPPPPPPPPPPPP   UUUUUUUU     UUUUUUUUBBBBBBBBBBBBBBBBB             JJJJJJJJJJJIIIIIIIIII       '),nl,
@@ -45,6 +45,22 @@ write('>w.                | '), write('Move up'),nl,
 write('>s.                | '), write('Move down'),nl,
 write('>a.                | '), write('Move left'),nl,
 write('>d.                | '), write('Move right'),nl.
+
+print_legends:-
+  nl,
+  write('              +-+-+-+-+-+-+-+'),nl,
+  write('              |L|e|g|e|n|d|s|'),nl,
+  write('              +-+-+-+-+-+-+-+'),nl,
+  nl,nl,
+write('>XXXXX.          | '), write('Dead Zone'),nl,
+write('>P.              | '), write('Player Position'),nl,
+write('>E.              | '), write('Enemy'),nl,
+write('>M.              | '), write('Medicine'),nl,
+write('>P.              | '), write('Player Position'),nl,
+write('>R.              | '), write('Armor'),nl,
+write('>A.              | '), write('Ammo'),nl,
+write('>W.              | '), write('Weapon'),nl,
+write('>P.              | '), write('Player Position'),nl.
 
 /*print player*/
 print_inflict_damage(Amount):-
@@ -142,3 +158,31 @@ fail_attack :-
 /* print fail move */
 fail_move :-
     nl, write('You can\'t move!'), nl.
+
+/*print win & lose*/
+print_lose:-
+
+  write('▄██   ▄    ▄██████▄  ███    █▄        ▄█        ▄██████▄     ▄████████    ▄████████  '),nl,
+  write('███   ██▄ ███    ███ ███    ███      ███       ███    ███   ███    ███   ███    ███  '),nl,
+  write('███▄▄▄███ ███    ███ ███    ███      ███       ███    ███   ███    █▀    ███    █▀   '),nl,
+  write('▀▀▀▀▀▀███ ███    ███ ███    ███      ███       ███    ███   ███         ▄███▄▄▄      '),nl,
+  write('▄██   ███ ███    ███ ███    ███      ███       ███    ███ ▀███████████ ▀▀███▀▀▀      '),nl,
+  write('███   ███ ███    ███ ███    ███      ███       ███    ███          ███   ███    █▄   '),nl,
+  write('███   ███ ███    ███ ███    ███      ███▌    ▄ ███    ███    ▄█    ███   ███    ███  '),nl,
+  write(' ▀█████▀   ▀██████▀  ████████▀       █████▄▄██  ▀██████▀   ▄████████▀    ██████████  '),nl,
+  write('                                     ▀                                               '),nl,
+  write('----------------------------Better luck next time!-----------------------------------'),nl,nl.
+
+
+print_win:-
+
+
+  write('  ▄██   ▄    ▄██████▄  ███    █▄        ▄█     █▄   ▄█  ███▄▄▄▄    '),nl,
+  write('  ███   ██▄ ███    ███ ███    ███      ███     ███ ███  ███▀▀▀██▄  '),nl,
+  write('  ███▄▄▄███ ███    ███ ███    ███      ███     ███ ███▌ ███   ███  '),nl,
+  write('  ▀▀▀▀▀▀███ ███    ███ ███    ███      ███     ███ ███▌ ███   ███  '),nl,
+  write('  ▄██   ███ ███    ███ ███    ███      ███     ███ ███▌ ███   ███  '),nl,
+  write('  ███   ███ ███    ███ ███    ███      ███     ███ ███  ███   ███  '),nl,
+  write('  ███   ███ ███    ███ ███    ███      ███ ▄█▄ ███ ███  ███   ███  '),nl,
+  write('   ▀█████▀   ▀██████▀  ████████▀        ▀███▀███▀  █▀    ▀█   █▀   '),nl,
+  write('-----------------Winner winner chicken dinner!---------------------'),nl.

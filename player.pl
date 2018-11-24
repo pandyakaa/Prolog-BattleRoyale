@@ -5,9 +5,9 @@
 /*Initial Player Stats*/
 initHealth(100).
 initArmor(0).
-initWeapon(hand).
-initInventory([]).
-initAmmo([0,0]).
+initWeapon(akm).
+initInventory([akm]).
+initAmmo([10,10]).
 
 
 randomCoordinate(X, Y):-
@@ -133,8 +133,7 @@ replace(L, _, _, L).
 %Weapon
 
 set_weapon(Weapon):-
-    retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(location(X, Y, CurrentWeapon)),
+    retract(player(X,Y,Health,Armor,CurrentWeapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
 %Position
@@ -164,37 +163,58 @@ step_up:-
     CurrentY > 0,
     Y is CurrentY-1,
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    deadzone_timer(T),
+      Tn is T-1,
+      retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+      (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 step_down:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
     CurrentY < 20,
     Y is CurrentY+1,
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    deadzone_timer(T),
+      Tn is T-1,
+      retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+      (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 step_left:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
     CurrentX > 0,
     X is CurrentX-1,
     retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    deadzone_timer(T),
+      Tn is T-1,
+      retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+      (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 step_right:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
     CurrentX < 20,
     X is CurrentX+1,
     retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+    deadzone_timer(T),
+      Tn is T-1,
+      retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+      (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 /*enemy*/
 
 init_enemy(0) :- !.
 init_enemy(N) :- generate_enemy(N), M is N-1, init_enemy(M).
 
+initHealthE(20).
 
 generate_enemy(Id):-
-  initHealth(Health),
+  initHealthE(Health),
   randomCoordinate(X,Y),
   asserta(enemy(Id, X,Y,Health)).
 
@@ -220,8 +240,12 @@ check_enemy_exist :-
 	write('There\'s enemy in your sigh'), nl, !.
 
 is_enemy_exist(X, Y) :-
-	enemy(_, A, B, _),
+	enemy(_, A, B, Health),
 	A =:= X, B =:= Y, !.
+
+is_enemy_all_dead :-
+	enemy(_,_,_,Health),
+	Health=0,!.
 
 
 /*nearby enemy*/
@@ -304,5 +328,3 @@ random_move(_) :- !.
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
   	asserta(enemy(Id, NewX, Y, Health)).
-
-%attack Player
