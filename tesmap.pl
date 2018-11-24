@@ -28,14 +28,14 @@ initTry:-
 endGame :-
     player(X,Y,_,_,_,_,_),
     deadzone_area(A),
-    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,A@>=Aright), !,
-    write('ngapain masuk deadzone dah. mati kan lo'),nl.
+    (X@=<A; Y@=<A; Aright is 19-A, X@>=Aright; Aright is 19-A, Y@>=Aright), !,
+    write('ngapain masuk deadzone dah. mati kan lo'),nl,!.
 
 endGame :-
     player(_, _, Health, _, _, _, _),
     Health==0, !,
-    write('yaelah main game gini doang mati lo'),nl.
-  
+    write('yaelah main game gini doang mati lo'),nl,!.
+
 /*endGame :-
     enemyList([]), !,
     write('Selamat Skidipapman berhasil bertahan hidup'),nl.*/
@@ -98,7 +98,7 @@ printPosition(_,_) :- write('-').
 /* LOOK */
 printLook(X,Y) :-
     deadzone_area(A),
-    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), 
+    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright),
     write('X').
 
 printLook(X,Y) :-
@@ -228,7 +228,7 @@ print_player_nearby :-
     get_position(X,Y), print_player_loc(X,Y), !.
 
 
-printMapLook(X,Y) :- 
+printMapLook(X,Y) :-
     player(A,B, _, _, _, _, _),
     X is A-1, Y is B-1,!,
     printLook(X,Y).
