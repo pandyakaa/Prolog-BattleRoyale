@@ -21,7 +21,7 @@ main_loop :-
   		%is_input(Input),
 		call(Input), nl,
 		exec(tick), nl,
-  	((is_turn(Input), is_finished(Input)); endGame).
+  	(Input == quit; endGame).
 
 /* Init everything when game started without load */
 init_everything :-
