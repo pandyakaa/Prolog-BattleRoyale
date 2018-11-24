@@ -9,14 +9,16 @@ attack :-
 				Ar > 0,
 				weaponDamage(Weapon,Damage),
 				enemy(_,X,Y,_),
+				decrease_Ammo(1,ar),
 				atk_enemy(X,Y,Damage),!.
 attack :-
 				player(X,Y,_,_,Weapon,_,[Ar,Smg]),
 				weaponAmmo(Ammo,Weapon),
 				Ammo = smg,
-		    Smg > 0, 
+		    Smg > 0,
 				weaponDamage(Weapon,Damage),
 				enemy(_,X,Y,_),
+				decrease_Ammo(1,smg),
 				atk_enemy(X,Y,Damage),!.
 attack :-
 				fail_attack,fail.
