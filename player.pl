@@ -308,5 +308,3 @@ random_move(_) :- !.
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
   	asserta(enemy(Id, NewX, Y, Health)).
-
-%attack Player
