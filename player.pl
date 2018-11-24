@@ -7,7 +7,7 @@ initHealth(100).
 initArmor(0).
 initWeapon(akm).
 initInventory([akm]).
-initAmmo([0,0]).
+initAmmo([10,10]).
 
 
 randomCoordinate(X, Y):-
