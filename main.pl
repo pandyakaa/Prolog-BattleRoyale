@@ -8,7 +8,7 @@ start :-
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
-	asserta(deadzone_timer(7)), !,
+	asserta(deadzone_timer(5)), !,
 	main_loop.
 
 /* Main loop of the program */

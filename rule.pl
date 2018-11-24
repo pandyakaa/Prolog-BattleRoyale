@@ -54,11 +54,12 @@ look :-
 				print_player_loc(X,Y),
 				print_items_loc(X,Y),
 				/* Kalkulasi map */
+				A is X, B is Y,
 				NW_X is X-1, NW_Y is Y-1,
 				N_X is X, N_Y is Y-1,
 				NE_X is X+1, NE_Y is Y-1,
 				W_X is X-1, W_Y is Y,
-				C_X is X-1, C_Y is Y,
+				C_X is X, C_Y is Y,
 				E_X is X+1, E_Y is Y,
 				SW_X is X-1, SW_Y is Y+1,
 				S_X is X, S_Y is Y+1,
@@ -66,15 +67,15 @@ look :-
 				/* Print sekitar */
 				print_north(N_X,N_Y), print_south(S_X,S_Y),
 				print_east(E_X,E_Y), print_west(W_X,W_Y), nl,
-				printLook(NW_X,NW_Y),!,
-				printLook(N_X,N_Y),!,
-				printLook(NE_X,NE_Y),!,nl,
-				printLook(W_X,W_Y),!,
-				printLook(X,Y),!,
-				printLook(E_X,E_Y),!, nl,
-				printLook(SW_X,SW_Y),!,
-				printLook(S_X,S_Y),!,
-				printLook(SE_X,SE_Y),!,nl.
+				printMapLook(NW_X,NW_Y),!,
+				printMapLook(N_X,N_Y),!,
+				printMapLook(NE_X,NE_Y),!,nl,
+				printMapLook(W_X,W_Y),!,
+				printMapLook(A,B), !,
+				printMapLook(E_X,E_Y),!, nl,
+				printMapLook(SW_X,SW_Y),!,
+				printMapLook(S_X,S_Y),!,
+				printMapLook(SE_X,SE_Y),!,nl.
 
 /* DROP ITEM */
 drop(Object) :-

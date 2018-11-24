@@ -1,0 +1,55 @@
+XXXXXXXXXXXXXXXXXXXX
+X-W-R-A-A----MWA---X
+X----RMRA---R----E-X
+XM---MWP---MA------X
+X---A---R---R------X
+X-------E----------X
+XW-A--A---M--W-----X
+X------M-M--WE--E--X
+X--A--M-M-A------E-X
+XM-MW-R--W----W----X
+XM--M--------------X
+XWW-R-R--MR----R---X
+XM-----E-R--W-A----X
+X-----RA----R-R----X
+X---------W-E------X
+X---R-----A---RR---X
+X--------E---------X
+X------------W-----X
+X-----------W----WWX
+XXXXXXXXXXXXXXXXXXXX
+
+NW  N   NE
+W   P   E
+SW  S   SE
+
+area(X, Y, Region) :- X>= 0, X=<4, Y>=0, Y=<5, Region = quarry, !.
+area(X, Y, Region) :- X>= 5, X=<9, Y>=0, Y=<5, Region = military_base, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=0, Y=<7, Region = mylta, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=6, Y=<11, Region = georgopol, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=6, Y=<11, Region = pochinki, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=8, Y=<12, Region = yasnaya, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=12, Y=<19, Region = zharki, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=12, Y=<19, Region = severny, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=13, Y=<19, Region = stalber.
+
+-QQQQBBBBBMMMMMM----
+-QQQQBBBBBMMMMMM----
+-QQQQBBBBBMMMMMM----
+-QQQQBBBBBMMMMMM----
+-QQQQBBBBBMMMMMM----
+----------MMMMMM----
+----------MMMMMM----
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------
+--------------------

@@ -35,7 +35,7 @@ endgame :-
 /*Deadzone*/
 deadzone_counter:-
     deadzone_timer(T),T==0,!,
-    retract(deadzone_timer(T)),asserta(deadzone_timer(8)),
+    retract(deadzone_timer(T)),asserta(deadzone_timer(6)),
     deadzone_area(X), Xn is X+1, retract(deadzone_area(X)), assertz(deadzone_area(Xn)).
 
 deadzone_counter:-!.
@@ -120,7 +120,9 @@ printLook(X,Y) :-
     enemy(_, X, Y, _),
     write('E').
 
-printLook(_,_) :- write('-').
+printLook(X,Y) :- write('-').
+
+/* LOOK 2 */
 
 
 /* INI TOLONG DIBENERIN YAK */
@@ -217,6 +219,53 @@ print_player_nearby :-
     get_position(X,Y), print_player_loc(X,Y), !.
 
 
+printMapLook(X,Y) :- 
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B-1,!,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B-1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B-1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(_,_) :-
+    write('-').
 
 /* print nearby location */
 print_north(X,Y) :-
@@ -247,3 +296,5 @@ print_nearby_loc(Direction, severny):-
     format('In the ~w, you see Severny', [Direction]), nl, !.
 print_nearby_loc(Direction, stalber):-
     format('In the ~w, you see Stalber', [Direction]), nl, !.
+print_nearby_loc(Direction, _) :-
+    format('in the ~w you see unknown area', [Direction]), nl, !.

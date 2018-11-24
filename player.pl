@@ -163,6 +163,11 @@ step_up:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
     CurrentY > 0,
     Y is CurrentY-1,
+    deadzone_timer(T),
+    Tn is T-1, 
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
@@ -170,6 +175,11 @@ step_down:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
     CurrentY < 20,
     Y is CurrentY+1,
+    deadzone_timer(T),
+    Tn is T-1, 
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
     retract(player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
@@ -177,6 +187,11 @@ step_left:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
     CurrentX > 0,
     X is CurrentX-1,
+    deadzone_timer(T),
+    Tn is T-1, 
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
     retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
@@ -184,6 +199,11 @@ step_right:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
     CurrentX < 20,
     X is CurrentX+1,
+    deadzone_timer(T),
+    Tn is T-1, 
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
     retract(player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
