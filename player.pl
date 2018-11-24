@@ -1,12 +1,12 @@
--dynamic(player/7).
+:-dynamic(player/7).
 :-dynamic(enemy/4).
 
 
 /*Initial Player Stats*/
 initHealth(100).
 initArmor(0).
-initWeapon(hand).
-initInventory([]).
+initWeapon(akm).
+initInventory([akm]).
 initAmmo([0,0]).
 
 
@@ -191,9 +191,10 @@ step_right:-
 init_enemy(0) :- !.
 init_enemy(N) :- generate_enemy(N), M is N-1, init_enemy(M).
 
+initHealthE(20).
 
 generate_enemy(Id):-
-  initHealth(Health),
+  initHealthE(Health),
   randomCoordinate(X,Y),
   asserta(enemy(Id, X,Y,Health)).
 
@@ -222,7 +223,7 @@ is_enemy_exist(X, Y) :-
 	enemy(_, A, B, Health),
 	A =:= X, B =:= Y, !.
 
-is_enemy_all_dead(X,Y) :- 
+is_enemy_all_dead(X,Y) :-
 	enemy(_,_,_,Health),
 	Health=0,!.
 
