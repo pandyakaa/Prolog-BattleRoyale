@@ -1,4 +1,4 @@
-:-dynamic(player/7).
+-dynamic(player/7).
 :-dynamic(enemy/4).
 
 
@@ -133,8 +133,7 @@ replace(L, _, _, L).
 %Weapon
 
 set_weapon(Weapon):-
-    retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-    asserta(location(X, Y, CurrentWeapon)),
+    retract(player(X,Y,Health,Armor,CurrentWeapon,Inventory,Ammo)),
     asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)).
 
 %Position
