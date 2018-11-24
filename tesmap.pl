@@ -25,17 +25,26 @@ initTry:-
     playerPos(2,10),
     asserta(deadzone_area(0)).
 
-endgame :-
+endGame :-
     player(X,Y,_,_,_,_,_),
     deadzone_area(A),
     (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,A@>=Aright), !,
-    write('cupu lo'),nl.
+    write('ngapain masuk deadzone dah. mati kan lo'),nl.
+
+endGame :-
+    player(_, _, Health, _, _, _, _),
+    Health==0, !,
+    write('yaelah main game gini doang mati lo'),nl.
+  
+/*endGame :-
+    enemyList([]), !,
+    write('Selamat Skidipapman berhasil bertahan hidup'),nl.*/
 
 
 /*Deadzone*/
 deadzone_counter:-
     deadzone_timer(T),T==0,!,
-    retract(deadzone_timer(T)),asserta(deadzone_timer(6)),
+    retract(deadzone_timer(T)),asserta(deadzone_timer(8)),
     deadzone_area(X), Xn is X+1, retract(deadzone_area(X)), assertz(deadzone_area(Xn)).
 
 deadzone_counter:-!.

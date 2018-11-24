@@ -15,14 +15,14 @@ randomCoordinate(X, Y):-
     X is A, Y is B.
 
 
-    init_Player:-
-        initHealth(Health),
-        initArmor(Armor),
-        initWeapon(Weapon),
-        initInventory(Inventory),
-        randomCoordinate(X, Y),
-        initAmmo(Ammo),
-        asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), !.
+init_Player:-
+    initHealth(Health),
+    initArmor(Armor),
+    initWeapon(Weapon),
+    initInventory(Inventory),
+    randomCoordinate(X, Y),
+    initAmmo(Ammo),
+    asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), !.
 
 
 
@@ -237,7 +237,7 @@ decrease_HealthE(Id, Amount):-
 check_enemy_exist :-
 	player(X,Y,_,_,_,_,_),
 	is_enemy_exist(X, Y),
-	write('There\'s enemy in your sigh'), nl, !.
+	write('There\'s enemy in your sight'), nl, !.
 
 is_enemy_exist(X, Y) :-
 	enemy(_, A, B, _),
@@ -285,42 +285,43 @@ generate_random_move(N) :- random_move(N), M is N-1, generate_random_move(M).
 random_move(Id) :-
 	random(1, 6, N),
 	step(Id, N), !.
+
 random_move(_) :- !.
 
-  step(Id, 1) :-
+step(Id, 1) :-
   	stepup(Id), !.
-  step(Id, 2) :-
+step(Id, 2) :-
   	stepdown(Id), !.
-  step(Id, 3) :-
+step(Id, 3) :-
   	stepleft(Id), !.
-  step(Id, 4) :-
+step(Id, 4) :-
   	stepright(Id), !.
-  step(Id, 5) :- !.
+step(Id, 5) :- !.
 
-  stepup(Id):-
+stepup(Id):-
   	enemy(Id, X, CurrentY, Health),
   	CurrentY > 0,
   	NewY is CurrentY-1,
   	retract(enemy(Id, X, CurrentY, Health)),
   	asserta(enemy(Id, X, NewY, Health)).
 
-  stepdown(Id):-
+stepdown(Id):-
   	enemy(Id, X, CurrentY, Health),
-  	CurrentY < 20,
+  	CurrentY < 19,
   	NewY is CurrentY+1,
   	retract(enemy(Id, X, CurrentY, Health)),
   	asserta(enemy(Id, X, NewY, Health)).
 
-  stepleft(Id):-
+stepleft(Id):-
   	enemy(Id, CurrentX, Y, Health),
   	CurrentX > 0,
   	NewX is CurrentX-1,
   	retract(enemy(Id, CurrentX, Y, Health)),
   	asserta(enemy(Id, NewX, Y, Health)).
 
-  stepright(Id):-
+stepright(Id):-
   	enemy(Id, CurrentX, Y, Health),
-  	CurrentX < 20,
+  	CurrentX < 19,
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
   	asserta(enemy(Id, NewX, Y, Health)).

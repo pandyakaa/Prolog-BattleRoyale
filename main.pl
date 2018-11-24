@@ -8,7 +8,7 @@ start :-
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
-	asserta(deadzone_timer(5)), !,
+	asserta(deadzone_timer(7)), !,
 	main_loop.
 
 /* Main loop of the program */
@@ -21,7 +21,7 @@ main_loop :-
   		%is_input(Input),
 		call(Input), nl,
 		exec(tick), nl,
-  	is_turn(Input), is_finished(Input), !.
+  	((is_turn(Input), is_finished(Input)); endGame).
 
 /* Init everything when game started without load */
 init_everything :-

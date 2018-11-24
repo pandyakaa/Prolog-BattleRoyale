@@ -128,7 +128,8 @@ print_kiri :-
 
 print_status:-
       player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
-      format('You are at (~d,~d)',[X,Y]),nl,
+      A is X+1, B is Y +1,
+      format('You are at (~d,~d)',[A,B]),nl,
       write('Health                 :'),write(Health),nl,
       write('Armor                  :'),write(Armor),nl,
       write('Current Weapon         :'),write(Weapon),nl,
