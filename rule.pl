@@ -14,12 +14,12 @@ attack :-
 	atk_enemy(X,Y,Damage),!.
 
 attack :-
+	fail_attack,fail,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	fail_attack,fail.
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 atk_enemy(X,Y,Damage) :-
 	enemy(Id,X,Y,Health),
