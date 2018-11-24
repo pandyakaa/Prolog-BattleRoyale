@@ -4,15 +4,15 @@
 :- dynamic(deadzone_timer/1).
 :- dynamic(playerPos/2).
 
-area(X, Y, Region) :- X>= 1, X=<4, Y>=1, Y=<5, Region = quarry, !.
-area(X, Y, Region) :- X>= 5, X=<9, Y>=1, Y=<5, Region = military_base, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=1, Y=<7, Region = mylta, !.
-area(X, Y, Region) :- X>= 1, X=<5, Y>=6, Y=<11, Region = georgopol, !.
-area(X, Y, Region) :- X>= 6, X=<9, Y>=6, Y=<10, Region = pochinki, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=8, Y=<12, Region = yasnaya, !.
-area(X, Y, Region) :- X>= 1, X=<5, Y>=12, Y=<15, Region = zharki, !.
-area(X, Y, Region) :- X>= 6, X=<9, Y>=11, Y=<15, Region = severny, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=13, Y=<15, Region = stalber.
+area(X, Y, Region) :- X>= 0, X=<4, Y>=0, Y=<5, Region = quarry, !.
+area(X, Y, Region) :- X>= 5, X=<9, Y>=0, Y=<5, Region = military_base, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=0, Y=<7, Region = mylta, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=6, Y=<11, Region = georgopol, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=6, Y=<11, Region = pochinki, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=8, Y=<12, Region = yasnaya, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=12, Y=<19, Region = zharki, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=12, Y=<19, Region = severny, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=13, Y=<19, Region = stalber.
 
 
 
