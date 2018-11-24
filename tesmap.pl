@@ -37,7 +37,7 @@ endGame :-
     write('yaelah main game gini doang mati lo'),nl.
   
 /*endGame :-
-    enemyList([]), !,
+    is_enemy_all_dead, !,
     write('Selamat Skidipapman berhasil bertahan hidup'),nl.*/
 
 

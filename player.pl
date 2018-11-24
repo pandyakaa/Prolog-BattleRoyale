@@ -232,6 +232,7 @@ decrease_HealthE(Id, Amount):-
     NewHealth is Health - Amount,
     retract(enemy(Id,X,Y,Health)),
     asserta(enemy(Id,X,Y,NewHealth)).
+
 /*enemy exist*/
 
 check_enemy_exist :-
@@ -303,27 +304,39 @@ stepup(Id):-
   	CurrentY > 0,
   	NewY is CurrentY-1,
   	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)).
+  	check_deadzone_enemy(X,NewY).
 
 stepdown(Id):-
   	enemy(Id, X, CurrentY, Health),
   	CurrentY < 19,
   	NewY is CurrentY+1,
   	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)).
+  	check_deadzone_enemy(X,NewY).
 
 stepleft(Id):-
   	enemy(Id, CurrentX, Y, Health),
-  	CurrentX > 0,
+  	CurrentX > 0, 
   	NewX is CurrentX-1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)).
+    check_deadzone_enemy(NewX,Y).
 
 stepright(Id):-
   	enemy(Id, CurrentX, Y, Health),
   	CurrentX < 19,
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)).
+  	check_deadzone_enemy(NewX,Y).
+%    asserta(enemy(Id, NewX, Y, Health)).
+
+check_deadzone_enemy(X,Y):-
+    enemy(Id, X,Y,_),
+    deadzone_area(A),
+    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,A@>=Aright), !,
+    write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+  	asserta(enemy(Id, X, Y, 0)), !.
+
+check_deadzone_enemy(X,Y) :-
+    enemy(Id, X, Y, Health),
+    asserta(enemy(Id,X,Y, Health)).
 
 %attack Player
