@@ -34,13 +34,13 @@ endGame :-
     print_lose,!.
 
 endGame :-
-  is_enemy_all_dead,
+  is_win(10),
   print_win.
 
 
 /*Deadzone*/
 deadzone_counter:-
-    deadzone_timer(T),T==0,!,
+    deadzone_timer(T),T=<0,!,
     retract(deadzone_timer(T)),asserta(deadzone_timer(8)),
     deadzone_area(X), Xn is X+1, retract(deadzone_area(X)), assertz(deadzone_area(Xn)).
 

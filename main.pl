@@ -64,14 +64,3 @@ is_turn(bawah) :-
 is_turn(_) :-
 	generate_random_move(10),
 	enemy_attack.
-
-  /* check if the game is finished */
-  is_finished(Input) :-
-  	Input = quit, !.
-  is_finished(_) :-
-  	\+ enemy(_,_,_,_), nl,
-  print_win, nl, quit, !.
-  is_finished(_) :-
-  	player(_,_,Health,_,_,_,_), ! ,
-  	Health =< 0, nl,
-  print_lose, nl, quit,!.
