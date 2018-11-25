@@ -265,7 +265,7 @@ is_enemy_exist(X, Y) :-
 
 is_enemy_all_dead :-
 	enemy(_,_,_,Health),
-	Health=0,!.
+	Health=:=0,!.
 
 
 /*nearby enemy*/

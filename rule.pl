@@ -14,7 +14,9 @@ attack :-
 	atk_enemy(X,Y,Damage),!.
 
 attack :-
-	fail_attack,fail,
+	fail_attack,
+	weaponAmmo(TypeAmmo,Weapon),
+	decrease_Ammo(1,TypeAmmo),fail,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
@@ -27,7 +29,10 @@ atk_enemy(X,Y,Damage) :-
 	print_inflict_damage(Damage),
 	decrease_Health(5),
 	print_decrease_health(5),
-	decrease_HealthE(Id,Damage),!.
+	decrease_HealthE(Id,Damage),
+	weaponAmmo(TypeAmmo,Weapon),
+	itemType(TypeAmmo,typeammo),
+	decrease_Ammo(1,typeammo),!.
 
 atk_enemy(_,_,_) :- !.
 
@@ -161,7 +166,8 @@ take_item(Object) :-
 		location(X,Y,Object),
 		itemType(Type, Object),
 		Type = ammo,
-		increase_Ammo(30,Object),
+		itemType(Ammo,typeammo),
+		increase_Ammo(30,typeammo),
 		retract(location(X,Y,Object)),!.
 
 take_item(Object) :-
@@ -173,11 +179,6 @@ take_item(Object) :-
 
 /* USE OBJECT */
 use(Object) :-
-	deadzone_timer(T),
-    Tn is T-1,
-    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
   itemType(Type,Object),
 	Type = weapon,
 	player(_,_,_,_,Weapon,Inventory,_),
@@ -186,18 +187,24 @@ use(Object) :-
 	del_item(Object),
 	set_weapon(Object),
 	add_item(Weapon),nl,
-	format('You switched your weapon to ~w !', [Object]), nl, !.
+	format('You switched your weapon to ~w !', [Object]), nl,
+	deadzone_timer(T),
+    Tn is T-1,
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl), !.
 
 	use(Object) :-
-		player(_,_,_,_,_,Inventory,_),
-		member(Object, Inventory),
-		del_item(Object),
-		effect(Object), nl,
-		deadzone_timer(T),
-	    Tn is T-1,
-	    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-	    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),!,fail.
+			 player(_,_,_,_,_,Inventory,_),
+			 member(Object, Inventory),
+			 del_item(Object),
+			 nl,
+			 effect(Object),
+			 deadzone_timer(T),
+	 	    Tn is T-1,
+	 	    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+	 	    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+	 	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),!.
 
 use(_) :-
 	deadzone_timer(T),
@@ -205,7 +212,7 @@ use(_) :-
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	nl, write('Tidak ada item!!'), nl , !,fail.
+	nl, write('Tidak ada item!!'), nl , !.
 
 /* OBJECT EFFECT */
 effect(Object) :-
