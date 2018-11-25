@@ -15,8 +15,7 @@ attack :-
 
 attack :-
 	fail_attack,
-	weaponAmmo(TypeAmmo,Weapon),
-	decrease_Ammo(1,TypeAmmo),fail,
+	decrease_Ammo(1),fail,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
@@ -28,10 +27,8 @@ atk_enemy(X,Y,Damage) :-
 		write('You see an enemy in your sight... You try attack him... '), nl,
 	print_inflict_damage(Damage),
 	decrease_Health(5),
-	print_decrease_health(5),
 	decrease_HealthE(Id,Damage),
-	weaponAmmo(TypeAmmo,Weapon),
-	decrease_Ammo(1,TypeAmmo),!.
+	decrease_Ammo(1),!.
 
 atk_enemy(_,_,_) :- !.
 
@@ -41,7 +38,7 @@ enemy_attack :-
 				enemy_atk(X,Y).
 
 enemy_atk(X,Y) :-
-				enemy(_,X,Y,_),
+				enemy(_,X,Y,Health), Health > 0,
 				decrease_Health(5),
 				print_decrease_health(5) ,!, fail.
 
@@ -165,8 +162,7 @@ take_item(Object) :-
 		location(X,Y,Object),
 		itemType(Type, Object),
 		Type = ammo,
-		itemType(Ammo,typeammo),
-		increase_Ammo(30,typeammo),
+		increase_Ammo(30),
 		retract(location(X,Y,Object)),!.
 
 take_item(Object) :-

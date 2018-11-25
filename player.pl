@@ -30,7 +30,7 @@ randomCoordinate(X, Y):-
         NewHealth is Amount+Health,
         NewHealth > 100,
         retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-        asserta(player(X,Y,100,Armor,Weapon,Inventory,Ammo)).
+        asserta(player(X,Y,100,Armor,Weapon,Inventory,Ammo)),!.
     increase_Health(Amount):-
         player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Amount+Health,
@@ -43,14 +43,14 @@ randomCoordinate(X, Y):-
         Armor = 0,
         NewHealth < 0,
         retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-        asserta(player(X,Y,0,Armor,Weapon,Inventory,Ammo)).
+        asserta(player(X,Y,0,Armor,Weapon,Inventory,Ammo)),!.
 
     decrease_Health(Amount):-
         player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
         NewHealth is Health - Amount,
         Armor = 0,
         retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory,Ammo)).
+        asserta(player(X,Y,NewHealth,Armor,Weapon,Inventory,Ammo)),!.
 
     decrease_Health(Amount):-
         player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
@@ -70,37 +70,47 @@ replace(L, _, _, L).
 
 
 %Ammo
-    increase_Ammo(Amount,ar):-
+    increase_Ammo(Amount):-
       player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      weaponAmmo(ar,Weapon),
       nth0(0,Ammo,Ar),
       NewAr is Ar+Amount,
       replace(Ammo,0,NewAr,NewAmmo),
       retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)),!.
 
-    decrease_Ammo(Amount,ar):-
+    increase_Ammo(Amount):-
       player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
-      nth0(0,Ammo,Ar),
-      NewAr is Ar-Amount,
-      replace(Ammo,0,NewAr,NewAmmo),
-      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
-
-    increase_Ammo(Amount,smg):-
-      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      weaponAmmo(smg,Weapon),
       nth0(1,Ammo,Smg),
       NewSmg is Smg+Amount,
       replace(Ammo,1,NewSmg,NewAmmo),
       retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)),!.
 
-    decrease_Ammo(Amount,smg):-
+    decrease_Ammo(Amount):-
       player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      weaponAmmo(ar,Weapon),
+      nth0(0,Ammo,Ar),
+      NewAr is Ar-Amount,
+      replace(Ammo,0,NewAr,NewAmmo),
+      retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)),!.
+
+
+
+    decrease_Ammo(Amount):-
+      player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
+      weaponAmmo(smg,Weapon),
       nth0(1,Ammo,Smg),
       NewSmg is Smg-Amount,
       replace(Ammo,1,NewSmg,NewAmmo),
       retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)).
+      asserta(player(X,Y,Health,Armor,Weapon,Inventory,NewAmmo)),!.
+
+
+
+
 
 
 
@@ -115,7 +125,7 @@ replace(L, _, _, L).
             NewArmor is Armor - Amount,
             NewArmor < 0,
             retract(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)),
-            asserta(player(X,Y,Health,0,Weapon,Inventory,Ammo)).
+            asserta(player(X,Y,Health,0,Weapon,Inventory,Ammo)),!.
 
     decrease_Armor(Amount):-
             player(X,Y,Health,Armor,Weapon,Inventory,Ammo),
@@ -163,7 +173,7 @@ step_up:-
       Tn is T-1,
       retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
       (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),map.
 
 step_down:-
     player(X,CurrentY,Health,Armor,Weapon,Inventory,Ammo),
@@ -175,7 +185,7 @@ step_down:-
       Tn is T-1,
       retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
       (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),map.
 
 step_left:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
@@ -187,7 +197,7 @@ step_left:-
       Tn is T-1,
       retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
       (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),map.
 
 step_right:-
     player(CurrentX,Y,Health,Armor,Weapon,Inventory,Ammo),
@@ -199,7 +209,7 @@ step_right:-
       Tn is T-1,
       retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
       (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+       write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),map.
 
 /*enemy*/
 
@@ -229,7 +239,8 @@ decrease_HealthE(Id, Amount):-
     drop_item(X,Y),
     print_enemy_kill,
   	print_drop_item,
-    retract(enemy(Id,X,Y,Health)).
+    retract(enemy(Id,X,Y,Health)),
+    asserta(enemy(Id,X,Y,0)).
 
 /* drop item */
 drop_item(X,Y):-
@@ -261,10 +272,12 @@ check_enemy_exist :-
 
 is_enemy_exist(X, Y) :-
 	enemy(_, A, B, Health),
-	A =:= X, B =:= Y, !.
+	A =:= X, B =:= Y, Health > 0 , !.
 
-is_enemy_all_dead :-
-	\+ enemy(_,_,_,_).
+is_win(N):- is_enemy_all_dead(N), M is N-1, is_enemy_all_dead(M).
+
+is_enemy_all_dead(N) :-
+	enemy(N,_,_,Health), Health = 0 .
 
 
 /*nearby enemy*/
@@ -322,43 +335,92 @@ random_move(_) :- !.
 
   stepup(Id):-
   	enemy(Id, X, CurrentY, Health),
+    Health>0,
   	CurrentY > 0,
   	NewY is CurrentY-1,
-  	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)),
-	check_deadzone_enemy(X,NewY).
+  deadzone_area(A),
+  (X@=<A; CurrentY@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,CurrentY@>=Aright),
+  write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+  retract(enemy(Id,X,CurrentY,Health)) ,
+  asserta(enemy(Id,X,CurrentY,0)), !.
+
+  stepup(Id):-
+    enemy(Id, X, CurrentY, Health),
+    Health>0,
+    CurrentY > 0,
+    NewY is CurrentY-1,
+    retract(enemy(Id, X, CurrentY, Health)),
+    asserta(enemy(Id, X, NewY, Health)),!.
 
   stepdown(Id):-
   	enemy(Id, X, CurrentY, Health),
-  	CurrentY < 20,
+  	Health>0,
+    CurrentY < 20,
+  	NewY is CurrentY+1,
+  deadzone_area(A),
+  (X@=<A; CurrentY@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,CurrentY@>=Aright),
+  write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+  retract(enemy(Id,X,CurrentY,Health)) ,
+  asserta(enemy(Id,X,CurrentY,0)), !.
+
+  stepdown(Id):-
+  	enemy(Id, X, CurrentY, Health),
+  	Health>0,
+    CurrentY < 20,
   	NewY is CurrentY+1,
   	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)),
-	check_deadzone_enemy(X,NewY).
+  	asserta(enemy(Id, X, NewY, Health)),!.
+
 
   stepleft(Id):-
   	enemy(Id, CurrentX, Y, Health),
-  	CurrentX > 0,
+  	Health>0,
+    CurrentX > 0,
+  	NewX is CurrentX-1,
+  deadzone_area(A),
+  (CurrentX@=<A; Y@=<A; Aright is 19-A ,CurrentX@>=Aright; Aright is 19-A ,Y@>=Aright),
+  write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+  retract(enemy(Id,CurrentX,Y,Health)) ,
+  asserta(enemy(Id,CurrentX,Y,0)), !.
+
+  stepleft(Id):-
+  	enemy(Id, CurrentX, Y, Health),
+  	Health>0,
+    CurrentX > 0,
   	NewX is CurrentX-1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)),
-	check_deadzone_enemy(NewX,Y).
+  	asserta(enemy(Id, NewX, Y, Health)),!.
+
+
 
   stepright(Id):-
   	enemy(Id, CurrentX, Y, Health),
-  	CurrentX < 20,
+  	Health>0,
+    CurrentX < 20,
+  	NewX is CurrentX+1,
+  deadzone_area(A),
+  (CurrentX@=<A; Y@=<A; Aright is 19-A ,CurrentX@>=Aright; Aright is 19-A ,Y@>=Aright),
+  write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+  retract(enemy(Id,CurrentX,Y,Health)) ,
+  asserta(enemy(Id,CurrentX,Y,0)), !.
+
+  stepright(Id):-
+  	enemy(Id, CurrentX, Y, Health),
+  	Health>0,
+    CurrentX < 20,
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)),
-	check_deadzone_enemy(NewX,Y).
+  	asserta(enemy(Id, NewX, Y, Health)),!.
 
-check_deadzone_enemy(X,Y):-
+
+/*check_deadzone_enemy(Id, X,Y):-
     enemy(Id, X,Y,_),
     deadzone_area(A),
     (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), !,
     write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
-    retract(enemy(Id,X,Y,Health)) , !.
+    retract(enemy(Id,X,Y,Health)) ,
+    asserta(enemy(Id,X,Y,0)), !.
 
-check_deadzone_enemy(X,Y) :-
+check_deadzone_enemy(Id,X,Y) :-
     enemy(Id, X, Y, Health),
-    asserta(enemy(Id,X,Y, Health)).
+    asserta(enemy(Id,X,Y, Health)).*/
