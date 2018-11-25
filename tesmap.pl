@@ -4,15 +4,15 @@
 :- dynamic(deadzone_timer/1).
 :- dynamic(playerPos/2).
 
-area(X, Y, Region) :- X>= 1, X=<4, Y>=1, Y=<5, Region = quarry, !.
-area(X, Y, Region) :- X>= 5, X=<9, Y>=1, Y=<5, Region = military_base, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=1, Y=<7, Region = mylta, !.
-area(X, Y, Region) :- X>= 1, X=<5, Y>=6, Y=<11, Region = georgopol, !.
-area(X, Y, Region) :- X>= 6, X=<9, Y>=6, Y=<10, Region = pochinki, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=8, Y=<12, Region = yasnaya, !.
-area(X, Y, Region) :- X>= 1, X=<5, Y>=12, Y=<15, Region = zharki, !.
-area(X, Y, Region) :- X>= 6, X=<9, Y>=11, Y=<15, Region = severny, !.
-area(X, Y, Region) :- X>= 10, X=<15, Y>=13, Y=<15, Region = stalber.
+area(X, Y, Region) :- X>= 0, X=<4, Y>=0, Y=<5, Region = quarry, !.
+area(X, Y, Region) :- X>= 5, X=<9, Y>=0, Y=<5, Region = military_base, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=0, Y=<7, Region = mylta, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=6, Y=<11, Region = georgopol, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=6, Y=<11, Region = pochinki, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=8, Y=<12, Region = yasnaya, !.
+area(X, Y, Region) :- X>= 0, X=<5, Y>=12, Y=<19, Region = zharki, !.
+area(X, Y, Region) :- X>= 6, X=<9, Y>=12, Y=<19, Region = severny, !.
+area(X, Y, Region) :- X>= 10, X=<19, Y>=13, Y=<19, Region = stalber.
 
 
 
@@ -25,11 +25,24 @@ initTry:-
     playerPos(2,10),
     asserta(deadzone_area(0)).
 
-endgame :-
+endGame :-
     player(X,Y,_,_,_,_,_),
     deadzone_area(A),
-    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,A@>=Aright), !,
-    write('cupu lo'),nl.
+    (X@=<A; Y@=<A; Aright is 19-A, X@>=Aright; Aright is 19-A, Y@>=Aright), !,
+    print_lose,!.
+
+endGame :-
+    player(_, _, Health, _, _, _, _),
+    Health==0, !,
+    print_lose,!.
+
+endGame :-
+  is_enemy_all_dead,
+  print_win.
+
+/*endGame :-
+    enemyList([]), !,
+    write('Selamat Skidipapman berhasil bertahan hidup'),nl.*/
 
 
 /*Deadzone*/
@@ -89,7 +102,7 @@ printPosition(_,_) :- write('-').
 /* LOOK */
 printLook(X,Y) :-
     deadzone_area(A),
-    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), 
+    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright),
     write('X').
 
 printLook(X,Y) :-
@@ -120,7 +133,9 @@ printLook(X,Y) :-
     enemy(_, X, Y, _),
     write('E').
 
-printLook(_,_) :- write('-').
+printLook(X,Y) :- write('-').
+
+/* LOOK 2 */
 
 
 /* INI TOLONG DIBENERIN YAK */
@@ -134,60 +149,6 @@ printMap(X,Y) :-
 printMap(X,Y) :-
     printPosition(X,Y), !,
     Xnew is X + 1, printMap(Xnew,Y).
-/*printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xmin, B == Ymin,
-    printPosition(Xmin,Ymin), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == X, B == Ymin,
-    printPosition(X,Ymin), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xplus, B == Ymin,
-    printPosition(Xplus,Ymin), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xmin, B == Y,
-    printPosition(Xmin,Y), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == X, B == Y,
-    printPosition(X,Y), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xplus, B == Y,
-    printPosition(Xplus,Y), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xmin, B == Yplus,
-    printPosition(Xmin,Yplus), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == X, B == Yplus,
-    printPosition(X,Yplus), !,
-    Anew is A+1, printMap(Anew,B).
-printMap(A,B) :-
-    player(X,Y,_,_,_,_,_),
-    Xmin is X-1, Xplus is X+1, Ymin is Y-1, Yplus is Y+1,
-    A == Xplus, B == Yplus,
-    printPosition(Xplus,Yplus), !,
-    Anew is A+1, printMap(Anew,B).*/
 
 printMap(X,Y) :- Xnew is X + 1, write('-'), !, printMap(Xnew, Y).
 
@@ -217,6 +178,53 @@ print_player_nearby :-
     get_position(X,Y), print_player_loc(X,Y), !.
 
 
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B-1,!,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B-1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B-1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A-1, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(X,Y) :-
+    player(A,B, _, _, _, _, _),
+    X is A+1, Y is B+1, !,
+    printLook(X,Y).
+
+printMapLook(_,_) :-
+    write('-').
 
 /* print nearby location */
 print_north(X,Y) :-
@@ -247,3 +255,5 @@ print_nearby_loc(Direction, severny):-
     format('In the ~w, you see Severny', [Direction]), nl, !.
 print_nearby_loc(Direction, stalber):-
     format('In the ~w, you see Stalber', [Direction]), nl, !.
+print_nearby_loc(Direction, _) :-
+    format('in the ~w you see unknown area', [Direction]), nl, !.
