@@ -17,7 +17,6 @@ area(X, Y, Region) :- X>= 10, X=<19, Y>=13, Y=<19, Region = stalber.
 exec(map) :- map, !.
 exec(tick) :- !, deadzone_counter.
 exec(exit) :- write('babay babyansyah'), nl.
-%exec(_) :- write('yeee kaga tau ni mo ngapain'), !.
 
 initTry:-
     playerPos(2,10),
@@ -140,9 +139,6 @@ printMap(X,Y) :-
 printMap(X,Y) :- Xnew is X + 1, write('-'), !, printMap(Xnew, Y).
 
 map :-
-    write('di hutan main kelinci'), nl,
-    write('map hutan:'), nl, nl,
-    %player(X,Y, _, _, _, _, _),
     printMap(0,0).
 
 

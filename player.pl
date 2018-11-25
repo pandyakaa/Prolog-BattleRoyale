@@ -3,10 +3,10 @@
 
 
 /*Initial Player Stats*/
-initHealth(100).
+initHealth(80).
 initArmor(0).
 initWeapon(akm).
-initInventory([uzi]).
+initInventory([bandage,vest,uzi]).
 initAmmo([10,10]).
 
 
@@ -217,16 +217,41 @@ generate_enemy(Id):-
 decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
-    NewHealth =< 0,
+    NewHealth > 0,
+    print_fail_kill,
     retract(enemy(Id,X,Y,Health)),
-    asserta(enemy(Id,X,Y,0)).
-    %drop(X,Y).
+    asserta(enemy(Id,X,Y,NewHealth)),!.
 
 decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
-    retract(enemy(Id,X,Y,Health)),
-    asserta(enemy(Id,X,Y,NewHealth)).
+    NewHealth =< 0,
+    drop_item(X,Y),
+    print_enemy_kill,
+  	print_drop_item,
+    retract(enemy(Id,X,Y,Health)).
+
+/* drop item */
+drop_item(X,Y):-
+	random(1,5,Rand),
+	Rand is 3,
+	drop_medicine(X,Y),!.
+
+drop_item(X,Y):-
+	random(1,5,Rand),
+	Rand is 4,
+	drop_weapon(X,Y),!.
+
+drop_medicine(X,Y):-
+	random(1, 4, N),
+	medicineHeal(N,A,_),
+	asserta(location(X,Y,A)).
+
+drop_weapon(X,Y):-
+	random(1,5,N),
+	weaponName(N,A),
+	asserta(location(X,Y,A)).
+
 /*enemy exist*/
 
 check_enemy_exist :-
@@ -239,8 +264,7 @@ is_enemy_exist(X, Y) :-
 	A =:= X, B =:= Y, !.
 
 is_enemy_all_dead :-
-	enemy(_,_,_,Health),
-	Health=0,!.
+	\+ enemy(_,_,_,_).
 
 
 /*nearby enemy*/
@@ -301,25 +325,40 @@ random_move(_) :- !.
   	CurrentY > 0,
   	NewY is CurrentY-1,
   	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)).
+  	asserta(enemy(Id, X, NewY, Health)),
+	check_deadzone_enemy(X,NewY).
 
   stepdown(Id):-
   	enemy(Id, X, CurrentY, Health),
   	CurrentY < 20,
   	NewY is CurrentY+1,
   	retract(enemy(Id, X, CurrentY, Health)),
-  	asserta(enemy(Id, X, NewY, Health)).
+  	asserta(enemy(Id, X, NewY, Health)),
+	check_deadzone_enemy(X,NewY).
 
   stepleft(Id):-
   	enemy(Id, CurrentX, Y, Health),
   	CurrentX > 0,
   	NewX is CurrentX-1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)).
+  	asserta(enemy(Id, NewX, Y, Health)),
+	check_deadzone_enemy(NewX,Y).
 
   stepright(Id):-
   	enemy(Id, CurrentX, Y, Health),
   	CurrentX < 20,
   	NewX is CurrentX+1,
   	retract(enemy(Id, CurrentX, Y, Health)),
-  	asserta(enemy(Id, NewX, Y, Health)).
+  	asserta(enemy(Id, NewX, Y, Health)),
+	check_deadzone_enemy(NewX,Y).
+
+check_deadzone_enemy(X,Y):-
+    enemy(Id, X,Y,_),
+    deadzone_area(A),
+    (X@=<A; Y@=<A; Aright is 19-A ,X@>=Aright; Aright is 19-A ,Y@>=Aright), !,
+    write('Enemy '), write(Id), write(' is dead by entering deadzone.'), nl,
+    retract(enemy(Id,X,Y,Health)) , !.
+
+check_deadzone_enemy(X,Y) :-
+    enemy(Id, X, Y, Health),
+    asserta(enemy(Id,X,Y, Health)).

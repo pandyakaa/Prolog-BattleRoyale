@@ -8,12 +8,14 @@ start :-
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
+	print_title,
+		print_commands,print_legends, write('\n'), map,
 	asserta(deadzone_timer(7)), !,
 	main_loop.
 
 /* Main loop of the program */
 main_loop :-
-  	print_title, print_player_nearby,
+  	print_player_nearby,
   	repeat,
   		set_seed(50), randomize,
   		write('\nDo something > '),
@@ -62,14 +64,3 @@ is_turn(bawah) :-
 is_turn(_) :-
 	generate_random_move(10),
 	enemy_attack.
-
-  /* check if the game is finished */
-  is_finished(Input) :-
-  	Input = quit, !.
-  is_finished(_) :-
-  	\+ enemy(_,_,_,_), nl,
-  print_win, nl, quit, !.
-  is_finished(_) :-
-  	player(_,_,Health,_,_,_,_), ! ,
-  	Health =< 0, nl,
-  print_lose, nl, quit,!.

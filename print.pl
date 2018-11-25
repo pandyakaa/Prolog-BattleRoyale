@@ -70,11 +70,13 @@ print_decrease_health(Amount) :-
     player(_,_,Health,_,_,_,_), format('Your Health: ~w', [Health]), nl.
 
 print_increase_health(Object,Amount) :-
-    format('You increased your health ~w by using ~w',[Amount],[Object]),nl,
+    format('You increased your health ~w by using',[Amount]),
+    format(' ~w',[Object]),nl,
     player(_,_,Health,_,_,_,_), format('Your Health is now ~w',[Health]),nl.
 
 print_armor_rate(Object,Amount):-
-      format('Your Armor is now by using ~w',[Amount],[Object]),nl.
+      format('Your Armor is now ~w',[Amount]),
+      format(' by using ~w',[Object]),nl.
 
 print_player_loc(X,Y) :-
     check_enemy_exist,
@@ -157,6 +159,16 @@ fail_attack :-
 /* print fail move */
 fail_move :-
     nl, write('You can\'t move!'), nl.
+
+/* print for enemy */
+print_fail_kill :-
+    write('You failed to kill him!'), nl.
+
+print_enemy_kill :-
+    write('Enemy has been killed!'), nl.
+
+print_drop_item :-
+    write('The enemy dropped an item!'),nl.
 
 /*print win & lose*/
 print_lose:-

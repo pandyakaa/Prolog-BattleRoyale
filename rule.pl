@@ -3,7 +3,7 @@
 /* PLAYER ATTACK  */
 
 attack :-
-	player(X,Y,_,_,Weapon,_,[_,_]),
+	player(X,Y,_,_,Weapon,_,_),
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
@@ -14,7 +14,9 @@ attack :-
 	atk_enemy(X,Y,Damage),!.
 
 attack :-
-	fail_attack,fail,
+	fail_attack,
+	weaponAmmo(TypeAmmo,Weapon),
+	decrease_Ammo(1,TypeAmmo),fail,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
@@ -22,12 +24,14 @@ attack :-
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
 
 atk_enemy(X,Y,Damage) :-
-	enemy(Id,X,Y,Health),
-	Health>0,
+	enemy(Id,X,Y,_),
+		write('You see an enemy in your sight... You try attack him... '), nl,
 	print_inflict_damage(Damage),
 	decrease_Health(5),
 	print_decrease_health(5),
-	decrease_HealthE(Id,Damage),fail.
+	decrease_HealthE(Id,Damage),
+	weaponAmmo(TypeAmmo,Weapon),
+	decrease_Ammo(1,TypeAmmo),!.
 
 atk_enemy(_,_,_) :- !.
 
@@ -39,7 +43,7 @@ enemy_attack :-
 enemy_atk(X,Y) :-
 				enemy(_,X,Y,_),
 				decrease_Health(5),
-				print_decrease_health(5) , fail.
+				print_decrease_health(5) ,!, fail.
 
 enemy_atk(_,_) :- !.
 
@@ -161,7 +165,8 @@ take_item(Object) :-
 		location(X,Y,Object),
 		itemType(Type, Object),
 		Type = ammo,
-		increase_Ammo(30,Object),
+		itemType(Ammo,typeammo),
+		increase_Ammo(30,typeammo),
 		retract(location(X,Y,Object)),!.
 
 take_item(Object) :-
@@ -173,11 +178,6 @@ take_item(Object) :-
 
 /* USE OBJECT */
 use(Object) :-
-	deadzone_timer(T),
-    Tn is T-1,
-    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
   itemType(Type,Object),
 	Type = weapon,
 	player(_,_,_,_,Weapon,Inventory,_),
@@ -186,33 +186,24 @@ use(Object) :-
 	del_item(Object),
 	set_weapon(Object),
 	add_item(Weapon),nl,
-	format('You switched your weapon to ~w !', [Object]), nl, !.
-
-use(Object) :-
+	format('You switched your weapon to ~w !', [Object]), nl,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
- 	itemType(Type,Object),
-	Type = armor,
-	player(_,_,_,_,_,Inventory,_),
-	member(Object, Inventory),
-	del_item(Object),
-	effect(Object), nl, !.
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl), !.
 
 	use(Object) :-
-		deadzone_timer(T),
-	    Tn is T-1,
-	    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-	    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	 	itemType(Type,Object),
-		Type = medicine,
-		player(_,_,_,_,_,Inventory,_),
-		member(Object, Inventory),
-		del_item(Object),
-		effect(Object), nl, !.
+			 player(_,_,_,_,_,Inventory,_),
+			 member(Object, Inventory),
+			 del_item(Object),
+			 nl,
+			 effect(Object),
+			 deadzone_timer(T),
+	 	    Tn is T-1,
+	 	    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+	 	    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+	 	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),!.
 
 use(_) :-
 	deadzone_timer(T),
@@ -220,7 +211,7 @@ use(_) :-
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	nl, write('Tidak ada item!!'), nl.
+	nl, write('Tidak ada item!!'), nl , !.
 
 /* OBJECT EFFECT */
 effect(Object) :-
@@ -229,8 +220,8 @@ effect(Object) :-
 
 give_effect(medicine,Object) :-
 			medicineHeal(_,Object,Rate),
-			increase_Health(Rate).
-			print_increase_health(Rate).
+			increase_Health(Rate),
+			print_increase_health(Object,Rate).
 
 give_effect(armor,Object) :-
 		armorStrength(_,Object,Rate),
@@ -239,7 +230,7 @@ give_effect(armor,Object) :-
 
 /* SAVE */
 
-save :-
+savegame :-
 			nl, write('Write the name of your file?'), nl,
 			write('> '), read(File),
 			atom_concat(File, '.txt', Filetxt),
@@ -272,7 +263,7 @@ save_player(Stream) :-
 
 	/* LOAD STATE */
 
-load :-
+loadgame :-
 				nl, write('Input file load!') , nl,
 				write('>') , read(File),
 				atom_concat(File,'.txt',Filetxt),
