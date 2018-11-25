@@ -171,10 +171,6 @@ take_item(Object) :-
 		add_item(Object),
 		retract(location(X,Y,Object)),!.
 
-
-
-
-
 /* USE OBJECT */
 use(Object) :-
 	deadzone_timer(T),

@@ -11,6 +11,15 @@ UMP	20	40
 S12K	70	8
 */
                             /* ======== DECLARING FACTS ======== */
+/*WEAPON AMMO*/
+
+weaponAmmo(ar,akm).
+weaponAmmo(ar,sks).
+weaponAmmo(ar,kar).
+weaponAmmo(smg,ump).
+weaponAmmo(smg,uzi).
+
+
 /* WEAPON NAME */
 weaponName(1, akm).
 weaponName(2, sks).

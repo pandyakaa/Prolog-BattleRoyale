@@ -1,7 +1,7 @@
 /* File MAIN */
 
 /* START THE GAME */
- 
+
 start :- g_read(started, X), X = 1, write('Game has already started'), nl, fail, !.
 start :-
 	g_read(started, X), X = 0, !,
@@ -20,8 +20,8 @@ main_loop :-
   		read(Input), nl,
   		%is_input(Input),
 		call(Input), nl,
-		exec(tick), nl,
-  	is_turn(Input), is_finished(Input), !.
+		exec(tick), nl, is_turn(Input),
+  	(Input == quit; endGame).
 
 /* Init everything when game started without load */
 init_everything :-
@@ -32,25 +32,6 @@ init_everything :-
 
 initDeadzone :-
 	asserta(deadzone_area(0)).
-/* Check if input is valid */
-%is_input(listing) :-
-% 	nl, write(' :) :( '), nl, !, fail.
-%is_input(look):-!.
-%is_input(save):-!.
-%is_input(help):-!.
-%is_input(attack):-!.
-%is_input(map):-!.
-%is_input(atas):-!.
-%is_input(kanan):-!.
-%is_input(bawah):-!.
-%is_input(kiri):-!.
-%is_input(quit):-!.
-%is_input(status):-!.
-%is_input(take(_)):-!.
-%is_input(use(_)):-!.
-%is_input(load):-!.
-%is_input(pray):-!.
-%is_input(_):- write('Wrong input. Please try again.'),nl,fail,!.
 
 /* Check for command which not make a turn */
 
@@ -87,8 +68,8 @@ is_turn(_) :-
   	Input = quit, !.
   is_finished(_) :-
   	\+ enemy(_,_,_,_), nl,
-  	write('You have won the game! Congrats!'), nl, quit, !.
+  print_win, nl, quit, !.
   is_finished(_) :-
   	player(_,_,Health,_,_,_,_), ! ,
   	Health =< 0, nl,
-  	write('You LOSEEEEE!!!!'), nl, quit,!.
+  print_lose, nl, quit,!.

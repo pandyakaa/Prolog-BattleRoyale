@@ -24,11 +24,6 @@ randomCoordinate(X, Y):-
         initAmmo(Ammo),
         asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), !.
 
-
-
-
-
-
 %Health
     increase_Health(Amount):-
         player(X,Y,Health,Armor,Weapon,Inventory,Ammo),

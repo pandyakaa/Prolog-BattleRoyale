@@ -14,8 +14,6 @@ area(X, Y, Region) :- X>= 0, X=<5, Y>=12, Y=<19, Region = zharki, !.
 area(X, Y, Region) :- X>= 6, X=<9, Y>=12, Y=<19, Region = severny, !.
 area(X, Y, Region) :- X>= 10, X=<19, Y>=13, Y=<19, Region = stalber.
 
-
-
 exec(map) :- map, !.
 exec(tick) :- !, deadzone_counter.
 exec(exit) :- write('babay babyansyah'), nl.
@@ -40,10 +38,6 @@ endGame :-
   is_enemy_all_dead,
   print_win.
 
-/*endGame :-
-    enemyList([]), !,
-    write('Selamat Skidipapman berhasil bertahan hidup'),nl.*/
-
 
 /*Deadzone*/
 deadzone_counter:-
@@ -52,9 +46,6 @@ deadzone_counter:-
     deadzone_area(X), Xn is X+1, retract(deadzone_area(X)), assertz(deadzone_area(Xn)).
 
 deadzone_counter:-!.
-
-
-
 
 printPosition(X,Y) :-
   deadzone_area(A),
@@ -97,8 +88,6 @@ printPosition(X,Y) :-
 
 printPosition(_,_) :- write('-').
 
-
-
 /* LOOK */
 printLook(X,Y) :-
     deadzone_area(A),
@@ -135,10 +124,8 @@ printLook(X,Y) :-
 
 printLook(X,Y) :- write('-').
 
-/* LOOK 2 */
+/* PRINT MAP */
 
-
-/* INI TOLONG DIBENERIN YAK */
 printMap(19,19) :- printPosition(19,19), nl, !.
 printMap(19, Y):- Ynew is Y + 1, printPosition(19,Y), nl, !, printMap(0,Ynew).
 printMap(X,Y) :-
@@ -165,13 +152,6 @@ is_able_move(_,Y):-deadzone_area(A),Y@=<A,!,fail.
 is_able_move(X,_):-deadzone_area(A),Aright is 19-A,X@>=Aright,!,fail.
 is_able_move(_,Y):-deadzone_area(A),Aright is 19-A,Y@>=Aright,!,fail.
 is_able_move(_,_).
-
- /*Enter deadzone*/
- /*enter_deadzone:-
-  player(X,Y,_,_,_,_,_),
-  deadzone_area(A),
-  (X@=<A; Y@=<A; Aright is 19-A, X@>=Aright; Aright is 19-A, Y@>=Aright),!,
-  write('yah cupu lu masuk deadzone'),nl. */
 
 /* print location player right now */
 print_player_nearby :-
@@ -236,7 +216,7 @@ print_east(X,Y) :-
 print_west(X,Y) :-
     area(X,Y,Region), print_nearby_loc(west, Region).
 
-/* INI TOLONG DIBENERIN YAK */
+/* PRINT NEARBY LOC */
 print_nearby_loc(Direction, quarry):-
     format('In the ~w, you see Quarry', [Direction]), nl, !.
 print_nearby_loc(Direction, military_base):-
