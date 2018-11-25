@@ -27,7 +27,7 @@ atk_enemy(X,Y,Damage) :-
 	print_inflict_damage(Damage),
 	decrease_Health(5),
 	print_decrease_health(5),
-	decrease_HealthE(Id,Damage),fail.
+	decrease_HealthE(Id,Damage),!.
 
 atk_enemy(_,_,_) :- !.
 
@@ -39,7 +39,7 @@ enemy_attack :-
 enemy_atk(X,Y) :-
 				enemy(_,X,Y,_),
 				decrease_Health(5),
-				print_decrease_health(5) , fail.
+				print_decrease_health(5) ,!, fail.
 
 enemy_atk(_,_) :- !.
 
@@ -197,7 +197,7 @@ use(Object) :-
 	    Tn is T-1,
 	    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
 	    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),!.
+	     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),!,fail.
 
 use(_) :-
 	deadzone_timer(T),
@@ -205,7 +205,7 @@ use(_) :-
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
      write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	nl, write('Tidak ada item!!'), nl , !.
+	nl, write('Tidak ada item!!'), nl , !,fail.
 
 /* OBJECT EFFECT */
 effect(Object) :-
@@ -214,8 +214,8 @@ effect(Object) :-
 
 give_effect(medicine,Object) :-
 			medicineHeal(_,Object,Rate),
-			increase_Health(Rate).
-			print_increase_health(Rate).
+			increase_Health(Rate),
+			print_increase_health(Object,Rate).
 
 give_effect(armor,Object) :-
 		armorStrength(_,Object,Rate),
