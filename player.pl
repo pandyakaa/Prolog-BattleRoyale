@@ -3,10 +3,10 @@
 
 
 /*Initial Player Stats*/
-initHealth(100).
+initHealth(80).
 initArmor(0).
 initWeapon(akm).
-initInventory([akm]).
+initInventory([bandage,vest,uzi]).
 initAmmo([10,10]).
 
 
@@ -23,11 +23,6 @@ randomCoordinate(X, Y):-
         randomCoordinate(X, Y),
         initAmmo(Ammo),
         asserta(player(X,Y,Health,Armor,Weapon,Inventory,Ammo)), !.
-
-
-
-
-
 
 %Health
     increase_Health(Amount):-
@@ -222,16 +217,41 @@ generate_enemy(Id):-
 decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
-    NewHealth =< 0,
+    NewHealth > 0,
+    print_fail_kill,
     retract(enemy(Id,X,Y,Health)),
-    asserta(enemy(Id,X,Y,0)).
-    %drop(X,Y).
+    asserta(enemy(Id,X,Y,NewHealth)),!.
 
 decrease_HealthE(Id, Amount):-
     enemy(Id,X,Y,Health),
     NewHealth is Health - Amount,
-    retract(enemy(Id,X,Y,Health)),
-    asserta(enemy(Id,X,Y,NewHealth)).
+    NewHealth =< 0,
+    drop_item(X,Y),
+    print_enemy_kill,
+  	print_drop_item,
+    retract(enemy(Id,X,Y,Health)).
+
+/* drop item */
+drop_item(X,Y):-
+	random(1,5,Rand),
+	Rand is 3,
+	drop_medicine(X,Y),!.
+
+drop_item(X,Y):-
+	random(1,5,Rand),
+	Rand is 4,
+	drop_weapon(X,Y),!.
+
+drop_medicine(X,Y):-
+	random(1, 4, N),
+	medicineHeal(N,A,_),
+	asserta(location(X,Y,A)).
+
+drop_weapon(X,Y):-
+	random(1,5,N),
+	weaponName(N,A),
+	asserta(location(X,Y,A)).
+
 /*enemy exist*/
 
 check_enemy_exist :-

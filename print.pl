@@ -1,4 +1,3 @@
-
 /*Display*/
 print_title :-
   nl,
@@ -159,6 +158,16 @@ fail_attack :-
 fail_move :-
     nl, write('You can\'t move!'), nl.
 
+/* print for enemy */
+print_fail_kill :-
+    write('You failed to kill him!'), nl.
+
+print_enemy_kill :-
+    write('Enemy has been killed!'), nl.
+
+print_drop_item :-
+    write('The enemy dropped an item!'),nl.
+    
 /*print win & lose*/
 print_lose:-
 

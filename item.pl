@@ -28,11 +28,11 @@ weaponName(4, ump).
 weaponName(5, uzi).
 
 /* WEAPON DAMAGE */
-weaponDamage(akm,20).
-weaponDamage(sks,30).
-weaponDamage(kar,50).
-weaponDamage(ump,20).
-weaponDamage(uzi,20).
+weaponDamage(akm,30).
+weaponDamage(sks,40).
+weaponDamage(kar,60).
+weaponDamage(ump,30).
+weaponDamage(uzi,30).
 
 /* AMMO NAME */
 ammoName(1, ar).

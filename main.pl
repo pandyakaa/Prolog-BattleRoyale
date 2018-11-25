@@ -8,12 +8,14 @@ start :-
 	g_assign(started, 1),
 	set_seed(50), randomize,
 	init_everything,
+	print_title,
+		print_commands,print_legends, write('\n'), map,
 	asserta(deadzone_timer(7)), !,
 	main_loop.
 
 /* Main loop of the program */
 main_loop :-
-  	print_title, print_player_nearby,
+  	print_player_nearby,
   	repeat,
   		set_seed(50), randomize,
   		write('\nDo something > '),
@@ -32,25 +34,6 @@ init_everything :-
 
 initDeadzone :-
 	asserta(deadzone_area(0)).
-/* Check if input is valid */
-%is_input(listing) :-
-% 	nl, write(' :) :( '), nl, !, fail.
-%is_input(look):-!.
-%is_input(save):-!.
-%is_input(help):-!.
-%is_input(attack):-!.
-%is_input(map):-!.
-%is_input(atas):-!.
-%is_input(kanan):-!.
-%is_input(bawah):-!.
-%is_input(kiri):-!.
-%is_input(quit):-!.
-%is_input(status):-!.
-%is_input(take(_)):-!.
-%is_input(use(_)):-!.
-%is_input(load):-!.
-%is_input(pray):-!.
-%is_input(_):- write('Wrong input. Please try again.'),nl,fail,!.
 
 /* Check for command which not make a turn */
 
