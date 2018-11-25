@@ -93,25 +93,26 @@ look :-
 
 /* DROP ITEM */
 drop(Object) :-
-	player(X,Y,_,_,_,_,_) , !,
-	player(_,_,_,_,_,Inventory,_) , !,
-	deadzone_timer(T),
-    Tn is T-1,
-    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
-    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
+	player(X,Y,_,_,_,_,_) ,
+	player(_,_,_,_,_,Inventory,_),
 	member(Object,Inventory),
 	del_item(Object),
 	asserta(location(X,Y,Object)),
-	format('You dropped ~w!',[Object]),nl,!.
-
-drop(Object) :-
+	format('You dropped ~w!',[Object]),nl,!,
 	deadzone_timer(T),
     Tn is T-1,
     retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
     (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
-     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl),
-	format('Kamu tidak punya ~w!',[Object]),nl.
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+
+drop(Object) :-
+	format('Kamu tidak punya ~w!',[Object]),nl,
+	deadzone_timer(T),
+    Tn is T-1,
+    retract(deadzone_timer(T)), asserta(deadzone_timer(Tn)),
+    (Tn == 0, write('DEADZONE IS SHRINKING! BE CAREFUL.'), nl;
+     write(Tn), write(' more tick to deadzone shrink. watch your move.'),nl).
+
 
 /* MOVE */
 
